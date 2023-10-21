@@ -1,6 +1,27 @@
-# DBMSPro
-Attendace Tracking  and Marking System
+# InClass - Attendance Tracking System
 
-## Overview
+Welcome to InClass, an Attendance Tracking System designed to streamline attendance management for educational institutions. InClass aims to provide a user-friendly, efficient, and secure solution for tracking and managing student attendance.
 
-The project entails developing a prototype for an Attendance Tracking System, a mobile application designed to automate and streamline attendance management processes within educational institutions. The system's purpose is to simplify the attendance tracking process for faculty members and students, providing an intuitive and efficient tool to monitor and manage attendance. By automating attendance record-keeping and providing valuable insights into attendance statistics, the system aims to enhance administrative efficiency and improve student engagement. The key objectives include real-time attendance monitoring, accurate attendance records, and an improved overall learning experience for students.
+## Project Overview
+
+InClass is a mobile application built with Flutter for the frontend and Django for the backend. The system offers features for both students and faculty, including session creation, real-time attendance tracking, and attendance history.
+
+## Getting Started
+
+To get started with InClass, follow the instructions in the respective README files for the frontend and backend components.
+
+- [Frontend README](./frontend/README.md)
+- [Backend README](./backend/README.md)
+
+## Features
+
+- Student and faculty login with secure authentication.
+- Session creation with time duration.
+- Real-time attendance marking during active sessions.
+- Attendance history and statistics.
+
+
+## License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
