@@ -1,55 +1,70 @@
 from django.db import models
+from django.contrib.auth.models import User
+from datetime import timedelta
+import uuid
 
 # Create your models here.
 
-class Courses(models.Model):
-    course_id = models.CharField(max_length=7)
-    course_name = models.CharField(max_length=30)
-    credits = models.IntegerField()
-
-
-class Sessions(models.Model):
-    sid = models.AutoField()
-    time = models.TimeField()
-    date = models.DateField()
-    duration = models.IntegerField()
-    course = models.ForeignKey(Courses,on_delete=models.CASCADE)
-    batch = models.CharField(max_length=4)
 
 class Student(models.Model):
-    roll_no = models.CharField(max_length=9)
+    roll_no = models.CharField(max_length=9, primary_key=True) 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
     name = models.CharField(max_length=30)
     batch = models.CharField(max_length=4)
+    elected_courses = models.ManyToManyField('Course')
+    attended_sessions = models.ManyToManyField('Session', blank=True)
 
-class Student_Courses(models.Model):
-    roll_no = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Courses , on_delete=models.CASCADE)
-
-
-class Attended(models.Model):
-    sid = models.ForeignKey(Sessions, on_delete=models.CASCADE)
-    roll_no = models.ForeignKey(Student,on_delete=models.CASCADE)
-    attended = models.BooleanField(default=False)
+    def __str__(self) -> str:
+        return self.name
 
 
 class Faculty(models.Model):
-    faculty_id = models.CharField(max_length=10)
+    faculty_id = models.CharField(max_length=10, primary_key=True)  
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='faculty')
     name = models.CharField(max_length=30)
+    course_taken = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        verbose_name = "Faculty"
+        verbose_name_plural = "Faculties"
 
 
+class Course(models.Model):
+    course_id = models.CharField(primary_key=True, max_length=10)
+    course_name = models.CharField(max_length=30)
 
-class Teacher_Course(models.Model):
-    faculty_id = models.ForeignKey(Faculty, on_delete=models.CASCADE)
-    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return self.course_name
 
 
-class Attendance(models.Model):
-    course = models.ForeignKey(Courses,on_delete=models.CASCADE)
-    roll_no = models.ForeignKey(Student,on_delete=models.CASCADE)
+class Session(models.Model):
+    sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    start_time = models.DateTimeField(auto_now=False, auto_now_add=True)
+    end_time = models.DateTimeField()
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    batch = models.CharField(max_length=4)
+    duration = models.PositiveIntegerField()  
 
-class Attendance_Details(models.Model):
-    course = models.ForeignKey(Courses,on_delete=models.CASCADE)
-    roll_no = models.ForeignKey(Student,on_delete=models.CASCADE)
-    classes_attended = models.IntegerField(default=0)
-    total_classes = models.IntegerField(default=0)
+    def save(self, *args, **kwargs):
+        if not self.end_time:
+            self.end_time = self.start_time + timedelta(minutes=self.duration)
+        super(Session, self).save(*args, **kwargs)
 
+
+class Classes_Attended(models.Model):
+    roll_no = models.ForeignKey('Student', on_delete=models.CASCADE)
+    course =  models.ForeignKey('Course', on_delete=models.CASCADE)
+    classes_attended  = models.PositiveIntegerField()
+
+    class Meta:
+        verbose_name = "Classes Attended"
+        verbose_name_plural = "Classes Attended"
+
+class Total_Classes(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    batch = models.CharField(max_length=4)
+    total_classes = models.PositiveIntegerField()
+    
+    class Meta:
+        verbose_name = "Total Classes"
+        verbose_name_plural = "Total Classes"
