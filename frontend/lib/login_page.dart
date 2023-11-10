@@ -17,7 +17,7 @@ class LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   String responseMessage = '';
 
-  Future<int> sendLoginData(String username, String password) async {
+  Future<void> sendLoginData(String username, String password) async {
     var logger = Logger();
 
     
@@ -32,14 +32,18 @@ class LoginPageState extends State<LoginPage> {
       try {
         if (response.statusCode == 200) {
           login_key = response.body;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context)=>HomePage(),
-              settings: RouteSettings(arguments:{'login_key': login_key})
-              ),
-            
-          );
+          setState(() {
+            responseMessage=login_key;
+          });
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyHomePage(),
+            settings: RouteSettings(arguments: {'login_key': login_key}),
+          ),
+        );
+          
         }
         else if(response.statusCode == 400){
           setState(() {
@@ -51,10 +55,8 @@ class LoginPageState extends State<LoginPage> {
           logger.i('Response status code: ${response.statusCode}');
           logger.i('Response body: ${response.body}');
         }
-        return response.statusCode;
         } catch (e) {
           logger.i('Error: $e');
-          return 500;
         }
 
   }

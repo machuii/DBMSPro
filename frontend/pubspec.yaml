@@ -33,6 +33,7 @@ dependencies:
   http: ^0.13.3
   shared_preferences: ^2.0.12
   logger: ^2.0.2
+  url_strategy: ^0.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
