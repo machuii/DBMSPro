@@ -19,6 +19,8 @@ class FacultySerializer(serializers.ModelSerializer):
 
 
 class SessionSerializer(serializers.ModelSerializer):
+    start_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
+    end_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
     class Meta:
         model = Session
         fields = ("sid", "start_time", "end_time")

@@ -54,11 +54,11 @@ class UserProfile(generics.RetrieveAPIView):
 def fetch_sessions(request):
     if request.method == "GET":
         data = request.data
-        course_id = data["course_id"]
+        faculty_id = data["faculty_id"]
         batch = data["batch"]
-        course = Course.objects.get(course_id=course_id)
+        faculty = Faculty.objects.get(faculty_id=faculty_id)
         sessions = Session.objects.filter(
-            course=course, batch=batch, end_time__lte=datetime.now()
+            faculty=faculty, batch=batch, end_time__lte=datetime.now()
         )
         return Response({"sessions": sessions})
 

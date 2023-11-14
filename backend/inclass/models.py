@@ -42,14 +42,12 @@ class Session(models.Model):
     sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     start_time = models.DateTimeField(auto_now=False, auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank=True)
-    course = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     batch = models.CharField(max_length=4)
     duration = models.PositiveIntegerField()  
 
     def save(self, *args, **kwargs):
-        if not self.end_time:
-            if self.start_time:
-                self.end_time = timezone.now() + timedelta(minutes=self.duration)
+        self.end_time = timezone.now() + timedelta(minutes=self.duration)
         super(Session, self).save(*args, **kwargs)
 
 
