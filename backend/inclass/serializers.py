@@ -18,5 +18,10 @@ class FacultySerializer(serializers.ModelSerializer):
         fields = ("faculty_id", "name", "course_taken")
 
 
+class SessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Session
+        fields = ("sid", "start_time", "end_time")
+
 
         

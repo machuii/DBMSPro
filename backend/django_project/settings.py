@@ -146,6 +146,15 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = (
     "http://localhost:8000",
     "http://localhost:3000",
+    "http://localhost:41731",
+    "http://localhost:33727",
+    "http://localhost:39767",
+    "http://localhost:43635",
 )
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://localhost:41731", "http://localhost:39767", "http://localhost:43635"]
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_HEADERS = ('content-type', 'key', 'accept', 'origin', 'authorization', 'accept-encoding')

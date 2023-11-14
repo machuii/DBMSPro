@@ -42,7 +42,7 @@ class Session(models.Model):
     sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     start_time = models.DateTimeField(auto_now=False, auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     batch = models.CharField(max_length=4)
     duration = models.PositiveIntegerField()  
 
