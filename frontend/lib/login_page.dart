@@ -4,6 +4,10 @@ import 'package:logger/logger.dart';
 import 'home_page.dart';
 import 'dart:convert';
 
+var myheaders = {
+  'Authorization': 'Token $login_key'
+};
+
 String login_key='';
 
 class LoginPage extends StatefulWidget {
@@ -28,7 +32,7 @@ class LoginPageState extends State<LoginPage> {
         'username': username,
         'password': password,
       },
-      );
+    );
 
       try {
         if (response.statusCode == 200) {

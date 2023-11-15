@@ -7,6 +7,8 @@ import 'faculty_page.dart';
 import 'student_page.dart';
 
 
+
+
 var logger=Logger();
 Map<String,String>? response_msg={};
 
@@ -30,10 +32,6 @@ class HomePage extends State<MyHomePage> {
   void sendgetrequest() async {
   var url = Uri.parse('http://localhost:8000/api/profile/');
 
-  var myheaders = {
-    'Authorization': 'Token $login_key'
-  };
-
   // Print key-value pairs of myheaders
   myheaders.forEach((key, value) {
     print('$key: $value');
@@ -47,21 +45,21 @@ class HomePage extends State<MyHomePage> {
         logger.i(response.body);
         response_msg = Map<String, String>.from(json.decode(response.body));
       });
-      response_msg['roll_no']==null
+      (response_msg != null && response_msg?['roll_no'] == null)
       ? Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => FacultyPage(),
+            builder: (context) => MyFacultyPage(),
             settings: RouteSettings(arguments: {'login_key': login_key}),
           ),
         )
         :Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => StudentPage(),
+            builder: (context) => MyStudentPage(),
             settings: RouteSettings(arguments: {'login_key': login_key}),
           ),
-        )
+        );
     } else {
       logger.i('Error - Status Code: ${response.statusCode}');
       logger.i('${login_key}');
