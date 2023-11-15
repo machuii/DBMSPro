@@ -119,9 +119,10 @@ def total_course_sessions(request):
         course_sessions = Total_Classes.objects.all().filter(
             course=request.user.faculty.course_taken
         )
-        ret = {}
+        ret = []
         for course_batch in course_sessions:
-            ret[course_batch.batch] = course_batch.total_classes
+            obj = [course_batch.batch, course_batch.total_classes]
+            ret.append(obj)
         return Response(ret)
 
 
