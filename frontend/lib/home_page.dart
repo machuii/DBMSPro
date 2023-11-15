@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:inclass/login_page.dart';
 import 'package:logger/logger.dart';
 import 'dart:convert';
 import 'faculty_page.dart';

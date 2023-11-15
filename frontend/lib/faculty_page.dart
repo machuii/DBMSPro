@@ -15,6 +15,7 @@ class FacultyPage extends State<MyFacultyPage> {
   String active_time = '';
   List<String> dropdownOptions = ['cs01', 'cs02', 'cs03', 'cs04'];
   String fac_name = '';
+  Map<String,dynamic>course_sessions={};
 
   @override
   void initState() {
@@ -34,6 +35,20 @@ class FacultyPage extends State<MyFacultyPage> {
         throw Exception("recent_session status code: ${response.statusCode}");
       }
     } catch (e) {
+      print("error: $e");
+    }
+
+    try{
+      var new_response= await http.get(Uri.parse('http://localhost:8000/api/course_sessions/'),headers:myheaders);
+      if(new_response.statusCode==200){
+        course_sessions=Map<String, dynamic>.from(jsonDecode(new_response.body));
+        // print("${new_response.body}");
+      }
+      else{
+        throw Exception("recent_session status code: ${new_response.statusCode}");
+      }
+    }
+    catch(e){
       print("error: $e");
     }
   }
@@ -62,7 +77,7 @@ class FacultyPage extends State<MyFacultyPage> {
         print("make_session response: ${response.statusCode}");
       }
     } catch (e) {
-      logger.i('Error make_session: $e');
+      print('Error make_session: $e');
     }
   }
 
@@ -74,69 +89,81 @@ class FacultyPage extends State<MyFacultyPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    view_faculty_page();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('faculty'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(fac_name),
-          DropdownButton<String>(
-            value: batch_selected,
-            items: dropdownOptions.map((String option) {
-              return DropdownMenuItem<String>(
-                value: option,
-                child: Text(option),
+Widget build(BuildContext context) {
+  view_faculty_page();
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('faculty'),
+    ),
+    body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(fac_name),
+        DropdownButton<String>(
+          value: batch_selected,
+          items: dropdownOptions.map((String option) {
+            return DropdownMenuItem<String>(
+              value: option,
+              child: Text(option),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              batch_selected = newValue!;
+            });
+          },
+        ),
+        TextField(
+          onChanged: (text) {
+            setState(() {
+              active_time = text;
+            });
+          },
+          decoration: InputDecoration(labelText: 'duration'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            create_session(batch_selected, active_time);
+          },
+          child: Text('create session'),
+        ),
+        // Wrap the Column with Expanded
+        Expanded(
+          child: ListView.builder(
+            itemCount: recent_sessions.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(recent_sessions[index]['course'] ?? ''),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(recent_sessions[index]['batch'] ?? ''),
+                    Text(recent_sessions[index]['datetime'] ?? ''),
+                  ],
+                ),
+                leading: Text(
+                  (recent_sessions[index]['attendance']).toString(),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                batch_selected = newValue!;
-              });
             },
           ),
-          TextField(
-            onChanged: (text) {
-              setState(() {
-                active_time = text;
-              });
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: course_sessions.length,
+            itemBuilder: (context, index) {
+              final key = course_sessions.keys.elementAt(index);
+              final value = course_sessions[key];
+              print('$key : $value');
+              return ListTile(
+                title: Text('$key : $value'),
+              );
             },
-            decoration: InputDecoration(labelText: 'duration'),
           ),
-          ElevatedButton(
-            onPressed: () {
-              create_session(batch_selected, active_time);
-            },
-            child: Text('create session'),
-          ),
-          // Wrap the Column with Expanded
-          Expanded(
-            child: ListView.builder(
-              itemCount: recent_sessions.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(recent_sessions[index]['course'] ?? ''),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(recent_sessions[index]['batch'] ?? ''),
-                      Text(recent_sessions[index]['datetime'] ?? ''),
-                    ],
-                  ),
-                  leading: Text(
-                    (recent_sessions[index]['attendance']).toString(),
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }
