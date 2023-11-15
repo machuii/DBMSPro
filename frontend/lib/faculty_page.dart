@@ -13,7 +13,7 @@ class MyFacultyPage extends StatefulWidget {
 
 class FacultyPage extends State<MyFacultyPage> {
 
-  String batch_selected = '';
+  String batch_selected = 'cs01';
   String active_time='';
   List<String> dropdownOptions = ['cs01', 'cs02', 'cs03', 'cs04'];
 
@@ -34,10 +34,11 @@ class FacultyPage extends State<MyFacultyPage> {
       },
       headers:myheaders,
     );
-
+    response_msg = Map<String, String>.from(json.decode(response.body));
+    print(response_msg?['sid']);
     try{
       if(response.statusCode==200){
-        print('session created');
+        print(response);
       }
       else{
         print("make_session response: ${response.statusCode}");
