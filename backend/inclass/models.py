@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import timedelta
+from datetime import timedelta, date
+from django.utils import timezone
 import uuid
 
 # Create your models here.
@@ -11,7 +12,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
     name = models.CharField(max_length=30)
     batch = models.CharField(max_length=4)
-    elected_courses = models.ManyToManyField('Course')
+    elected_courses = models.ManyToManyField('Course', blank=True)
     attended_sessions = models.ManyToManyField('Session', blank=True)
 
     def __str__(self) -> str:
@@ -27,6 +28,10 @@ class Faculty(models.Model):
     class Meta:
         verbose_name = "Faculty"
         verbose_name_plural = "Faculties"
+    
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Course(models.Model):
@@ -40,14 +45,13 @@ class Course(models.Model):
 class Session(models.Model):
     sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     start_time = models.DateTimeField(auto_now=False, auto_now_add=True)
-    end_time = models.DateTimeField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    end_time = models.DateTimeField(null=True, blank=True)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     batch = models.CharField(max_length=4)
     duration = models.PositiveIntegerField()  
 
     def save(self, *args, **kwargs):
-        if not self.end_time:
-            self.end_time = self.start_time + timedelta(minutes=self.duration)
+        self.end_time = timezone.now() + timedelta(minutes=self.duration)
         super(Session, self).save(*args, **kwargs)
 
 
@@ -63,7 +67,7 @@ class Classes_Attended(models.Model):
 class Total_Classes(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     batch = models.CharField(max_length=4)
-    total_classes = models.PositiveIntegerField()
+    total_classes = models.PositiveIntegerField(default=0)
     
     class Meta:
         verbose_name = "Total Classes"

@@ -1,0 +1,14 @@
+CS3001D
+Theory of Computation
+CS3002D
+Database Management Systems
+CS3003D
+Operating Systems
+MS3001D
+Engineering Economics
+CS4050D
+Design and Analysis of Algorithms
+CS4021D
+Number Theory and Cryptography
+CS4067D
+Foundations of Programming

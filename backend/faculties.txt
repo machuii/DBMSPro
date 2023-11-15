@@ -1,0 +1,30 @@
+SZ
+S Sheerazuddin
+CS3001D
+R
+Raju Hazari
+CS3001D
+MP
+M Prabu 
+CS3002D
+KAN
+K Abdul Nazeer 
+CS3002D
+JPB
+Jayaraj P B 
+CS3003D
+SK
+Saidalavi Kalady
+CS3003D
+HVN
+Hiran V Nath 
+CS4021D
+SC
+Sudarshan Chakravorthy
+CS4050D
+PVK
+Paleri Vineeth Kumar 
+CS4067D
+VP
+Vinod Pathari
+CS4067D
