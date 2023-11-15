@@ -5,15 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'home_page.dart';
 import 'dart:convert';
 
-<<<<<<< HEAD
-String login_key = '';
-=======
 var myheaders = {
   'Authorization': 'Token $login_key'
 };
 
 String login_key='';
->>>>>>> b1f9b2cbeda32fcca2cc031404d73c28b3c93ef1
 
 class LoginPage extends StatefulWidget {
   @override
@@ -113,7 +109,7 @@ class LoginPageState extends State<LoginPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    minimumSize: Size(170, 50), // Adjust width and height as needed
+                    minimumSize: Size(215, 50), // Adjust width and height as needed
                   ),
                 ),
                 SizedBox(width: 12),
@@ -140,7 +136,7 @@ class LoginPageState extends State<LoginPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    minimumSize: Size(170, 50), // Adjust width and height as needed
+                    minimumSize: Size(215, 50), // Adjust width and height as needed
                   ),
                 ),
               ],
