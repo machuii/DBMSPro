@@ -1,0 +1,19 @@
+import os
+import django
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_project.settings")
+django.setup()
+
+from inclass.models import Student, Course, Faculty
+from django.contrib.auth.models import User
+        
+with open('faculties.txt', 'r') as file:
+    gen_list = file.readlines()
+    list_len = len(gen_list)
+    for i in range (0, list_len, 3):
+        user = User(username=gen_list[i], password=gen_list[i])
+        user.save()
+        course = Course.objects.get(course_id=gen_list[i + 2])
+        faculty = Faculty(faculty_id=gen_list[i], user=user, name=gen_list[i + 1], course_taken=course)
+        faculty.save()
+    file.close()
