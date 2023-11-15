@@ -12,7 +12,7 @@ with open('CS01.txt', 'r') as file:
     list_len = len(gen_list)
     for i in range (0, list_len, 2):
         user = User.objects.create_user(username=gen_list[i].strip(), password=gen_list[i].strip())
-        student = Student(roll_no=gen_list[i], user=user, name=gen_list[i + 1], batch="CS01")
+        student = Student(roll_no=gen_list[i].strip(), user=user, name=gen_list[i + 1].strip(), batch="CS01")
         student.save()
     file.close()
 
@@ -23,7 +23,7 @@ with open('CS02.txt', 'r') as file:
     list_len = len(gen_list)
     for i in range (0, list_len, 2):
         user = User.objects.create_user(username=gen_list[i].strip(), password=gen_list[i].strip())
-        student = Student(roll_no=gen_list[i], user=user, name=gen_list[i + 1], batch="CS02")
+        student = Student(roll_no=gen_list[i].strip(), user=user, name=gen_list[i + 1].strip(), batch="CS02")
         student.save()
     file.close()
 
@@ -33,7 +33,7 @@ with open('CS03.txt', 'r') as file:
     list_len = len(gen_list)
     for i in range (0, list_len, 2):
         user = User.objects.create_user(username=gen_list[i].strip(), password=gen_list[i].strip())
-        student = Student(roll_no=gen_list[i], user=user, name=gen_list[i + 1], batch="CS03")
+        student = Student(roll_no=gen_list[i].strip(), user=user, name=gen_list[i + 1].strip(), batch="CS03")
         student.save()
     file.close()
 
@@ -43,6 +43,6 @@ with open('CS04.txt', 'r') as file:
     list_len = len(gen_list)
     for i in range (0, list_len, 2):
         user = User.objects.create_user(username=gen_list[i].strip(), password=gen_list[i].strip())
-        student = Student(roll_no=gen_list[i], user=user, name=gen_list[i + 1], batch="CS04")
+        student = Student(roll_no=gen_list[i].strip(), user=user, name=gen_list[i + 1].strip(), batch="CS04")
         student.save()
     file.close()

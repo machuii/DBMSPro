@@ -111,6 +111,8 @@ def create_session(request):
         total_classes.save()
         return Response({"sid": session.sid})
 
+
+
 @api_view(["GET"]) # for aculty to see the total number of classes of his course to each batch
 def total_course_sessions(request):
     if request.method == "GET":
@@ -119,6 +121,20 @@ def total_course_sessions(request):
         for course_batch in course_sessions:
             ret[course_batch.batch] = course_batch.total_classes
         return Response(ret)
+
+
+
+@api_view(["GET"]) # for faculty to see the the attendance of all the students of a batches
+def batch_students_attendance(request):
+    if request.method == "GET":
+        batch = request.GET.get('batch')
+        students = Student.objects.all().filter(batch=batch)
+        ret = []
+        for student in students:
+            obj = [student.roll_no, student.name, Classes_Attended.objects.get_or_create(roll_no=student, course=request.user.faculty.course_taken)[0].classes_attended]
+            ret.append(obj)
+        return Response(ret)
+
 
 
 @api_view(["GET"])  # for individual student
