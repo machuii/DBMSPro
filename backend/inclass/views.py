@@ -9,12 +9,15 @@ from datetime import datetime
 from .utils import find_classes_needed
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse
+from django.utils import timezone
 
 
 class SessionList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
+
 
 class UserProfile(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -58,10 +61,10 @@ def fetch_sessions(request):
     if request.method == "GET":
         data = request.data
         batch = data["batch"]
-        sessions = Session.objects.filter(
-             batch=batch, end_time__lte=datetime.now()
+        sessions = list(
+            Session.objects.filter(batch=batch, end_time__gte=timezone.now()).values()
         )
-        return Response({"sessions": sessions})
+        return JsonResponse(sessions, safe=False)
 
 
 @api_view(["PUT"])  # attendance marking for students
@@ -101,24 +104,44 @@ def create_session(request):
         faculty = request.user.faculty
         duration = int(data["duration"])
         batch = data["batch"]
-        #create the session
+        # create the session
         session = Session(batch=batch, duration=duration, faculty=faculty)
         session.save()
-        
-        #increment the total number of classes of the course taken to the batch
-        total_classes = Total_Classes.objects.get_or_create(batch=batch, course=faculty.course_taken)[0]
+
+        # increment the total number of classes of the course taken to the batch
+        total_classes = Total_Classes.objects.get_or_create(
+            batch=batch, course=faculty.course_taken
+        )[0]
         total_classes.total_classes += 1
         total_classes.save()
         return Response({"sid": session.sid})
 
+
+
 @api_view(["GET"]) # for aculty to see the total number of classes of his course to each batch
 def total_course_sessions(request):
     if request.method == "GET":
-        course_sessions = Total_Classes.objects.all().filter(course=request.user.faculty.course_taken)
+        course_sessions = Total_Classes.objects.all().filter(
+            course=request.user.faculty.course_taken
+        )
         ret = {}
         for course_batch in course_sessions:
             ret[course_batch.batch] = course_batch.total_classes
         return Response(ret)
+
+
+
+@api_view(["GET"]) # for faculty to see the the attendance of all the students of a batches
+def batch_students_attendance(request):
+    if request.method == "GET":
+        batch = request.GET.get('batch')
+        students = Student.objects.all().filter(batch=batch)
+        ret = []
+        for student in students:
+            obj = [student.roll_no, student.name, Classes_Attended.objects.get_or_create(roll_no=student, course=request.user.faculty.course_taken)[0].classes_attended]
+            ret.append(obj)
+        return Response(ret)
+
 
 
 @api_view(["GET"])  # for individual student
@@ -146,3 +169,12 @@ def get_attendance_statistics(request):
         )
         return Response({"attendance_statistics": attendance_statistics})
 
+
+@api_view(["GET"])  # faculty can view the most recent 3 sessions
+def recent_sessions(request):
+    if request.method == "GET":
+        faculty = request.user.faculty
+        recent_sessions = list(
+            Session.objects.filter(faculty=faculty).order_by("-start_time").values()
+        )[:3]
+        return Response(recent_sessions)

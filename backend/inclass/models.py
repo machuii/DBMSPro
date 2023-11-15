@@ -58,7 +58,7 @@ class Session(models.Model):
 class Classes_Attended(models.Model):
     roll_no = models.ForeignKey('Student', on_delete=models.CASCADE)
     course =  models.ForeignKey('Course', on_delete=models.CASCADE)
-    classes_attended  = models.PositiveIntegerField()
+    classes_attended  = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = "Classes Attended"
