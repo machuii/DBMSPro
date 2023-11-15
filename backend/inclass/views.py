@@ -68,7 +68,7 @@ def fetch_sessions(request):
             ret["end_time"] = session.end_time.strftime("%Y-%m-%d %H:%M")
             ret["faculty"] = session.faculty.name
             return Response(ret)
-        return JsonResponse({"Error details" : "no sessions"}, safe=False)
+        return JsonResponse({"Error details" : "no sessions"}, safe=False, status=404)
 
 
 @api_view(["PUT"])  # attendance marking for students
