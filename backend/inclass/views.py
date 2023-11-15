@@ -75,28 +75,19 @@ def fetch_sessions(request):
 def mark_attendance(request):
     if request.method == "PUT":
         data = request.data
-        roll_no = data["roll_no"]
-        course_id = data["course_id"]
-        received_sid = data["sid"]
-        student = Student.objects.get(roll_no=roll_no)
-        course = Course.objects.get(course_id=course_id)
-        session_id = Session.objects.get(sid=received_sid)
+        sid = data["sid"]
+        session = Session.objects.get(sid=sid)
 
-        if session_id.end_time <= datetime.now():
-            return Response({"error": "Session has ended"})
+        if session.end_time <= timezone.now():
+            return Response({"error": "Session has ended"}, status=403)
 
         else:
-            Class_attended = Classes_Attended.objects.get(
-                roll_no=roll_no, course_id=course_id
-            )
-            if Classes_attended is None:
-                Classes_attended = Classes_Attended(
-                    roll_no=roll_no, course_id=course_id, classes_attended=1
-                )
-                Classes_attended.save()
-            else:
-                Classes_attended.classes_attended += 1
-                Classes_attended.save()
+            student = request.user.student
+            student.attended_sessions.add(session)
+            student_course = Classes_Attended.objects.get_or_create(course=session.faculty.course_taken, student=student)[0]
+            student_course.classes_attended += 1
+            student_course.save()
+            return Response({"Attendace marked successfully"})
 
 
 @api_view(["POST"])  # for faculty only
@@ -142,7 +133,7 @@ def batch_students_attendance(request):
         students = Student.objects.all().filter(batch=batch)
         ret = []
         for student in students:
-            obj = [student.roll_no, student.name, Classes_Attended.objects.get_or_create(roll_no=student, course=request.user.faculty.course_taken)[0].classes_attended]
+            obj = [student.roll_no, student.name, Classes_Attended.objects.get_or_create(student=student, course=request.user.faculty.course_taken)[0].classes_attended]
             ret.append(obj)
         return Response(ret)
 
@@ -151,27 +142,16 @@ def batch_students_attendance(request):
 @api_view(["GET"])  # for individual student
 def get_attendance_statistics(request):
     if request.method == "GET":
-        data = request.data
-        course_id = data["course_id"]
-        batch = data["batch"]
-        roll_no = data["roll_no"]
-        course = Course.objects.get(course_id=course_id)
-        total_classes = Total_Classes.objects.get(
-            course=course, batch=batch
-        ).total_classes
-        classes_attended = Classes_Attended.objects.get(
-            roll_no=roll_no, course=course
-        ).classes_attended
-        attendance_statistics = {}
-        attendance_statistics["total_classes"] = total_classes
-        attendance_statistics["classes_attended"] = classes_attended
-        attendance_statistics["attendance_percentage"] = (
-            classes_attended / total_classes
-        ) * 100
-        attendance_statistics["classes_needed"] = find_classes_needed(
-            classes_attended, total_classes, 70
-        )
-        return Response({"attendance_statistics": attendance_statistics})
+        student = request.user.student
+        courses_attended = Classes_Attended.objects.all().filter(student=student)
+        ret = []
+        for course_attended in courses_attended:
+                obj = {}
+                obj['course'] = course_attended.course.course_name
+                obj['attended'] = course_attended.classes_attended
+                obj['total classes'] = Total_Classes.objects.get_or_create(course=course_attended.course, batch=student.batch)[0].total_classes
+                ret.append(obj)
+        return Response(ret)
 
 
 @api_view(["GET"])  # faculty can view the most recent 3 sessions

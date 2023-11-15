@@ -26,4 +26,5 @@ class SessionSerializer(serializers.ModelSerializer):
         fields = ("sid", "batch", "faculty", "start_time", "end_time")
 
 
+
         

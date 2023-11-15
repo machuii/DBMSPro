@@ -56,13 +56,17 @@ class Session(models.Model):
 
 
 class Classes_Attended(models.Model):
-    roll_no = models.ForeignKey('Student', on_delete=models.CASCADE)
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)
     course =  models.ForeignKey('Course', on_delete=models.CASCADE)
     classes_attended  = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = "Classes Attended"
         verbose_name_plural = "Classes Attended"
+
+
+    def __str__(self) -> str:
+        return self.student.roll_no + ' - ' + self.course.course_name
 
 class Total_Classes(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
