@@ -138,8 +138,8 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ]
 }
 
@@ -156,6 +156,7 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://localhost:41731", "http
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 CORS_ALLOW_HEADERS = ('content-type', 'key', 'accept', 'origin', 'authorization', 'accept-encoding')
 
