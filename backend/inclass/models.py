@@ -12,7 +12,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
     name = models.CharField(max_length=30)
     batch = models.CharField(max_length=4)
-    elected_courses = models.ManyToManyField('Course')
+    elected_courses = models.ManyToManyField('Course', blank=True)
     attended_sessions = models.ManyToManyField('Session', blank=True)
 
     def __str__(self) -> str:
