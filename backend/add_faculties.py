@@ -11,8 +11,8 @@ with open('faculties.txt', 'r') as file:
     gen_list = file.readlines()
     list_len = len(gen_list)
     for i in range (0, list_len, 3):
-        user = User(username=gen_list[i], password=gen_list[i])
-        user.save()
+
+        user = User.objects.create_user(username=gen_list[i].strip(), password=gen_list[i].strip())
         course = Course.objects.get(course_id=gen_list[i + 2])
         faculty = Faculty(faculty_id=gen_list[i], user=user, name=gen_list[i + 1], course_taken=course)
         faculty.save()
