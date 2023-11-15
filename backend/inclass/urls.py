@@ -9,11 +9,8 @@ urlpatterns = [
     path("mark_attendance/", views.mark_attendance, name="mark_attendance"),
     path("get_attendance_statistics/", views.get_attendance_statistics, name="get_attendance_statistics",),
     path("fetch_sessions/", views.fetch_sessions, name="fetch_sessions"),
-<<<<<<< HEAD
     path("batch_attendance/", batch_students_attendance, name="batch_attendance"),
-=======
     path("recent_sessions/", views.recent_sessions, name="recent_sessions"),
->>>>>>> c8461fade8b07fdbbe3f2c5cc8b6d26bdfae23c7
     # for testing
     path("sessions/", SessionList.as_view(), name="sessions_list"),
 ]
