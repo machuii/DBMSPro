@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -158,3 +158,4 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://localhost:41731", "http
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_HEADERS = ('content-type', 'key', 'accept', 'origin', 'authorization', 'accept-encoding')
+

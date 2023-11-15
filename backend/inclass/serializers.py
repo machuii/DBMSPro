@@ -23,7 +23,7 @@ class SessionSerializer(serializers.ModelSerializer):
     end_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
     class Meta:
         model = Session
-        fields = ("sid", "start_time", "end_time")
+        fields = ("sid", "batch", "faculty", "start_time", "end_time")
 
 
         

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .models import Student, Faculty, Course, Session, Classes_Attended, Total_Classes
 from .serializers import StudentSerializer, FacultySerializer, SessionSerializer
+from .permissions import IsFaculty
 from datetime import datetime
 from .utils import find_classes_needed
 
@@ -15,6 +16,7 @@ class SessionList(generics.ListAPIView):
 
 class UserProfile(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
+
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
@@ -26,7 +28,6 @@ class UserProfile(generics.RetrieveAPIView):
         except Student.DoesNotExist:
             pass
 
-        # Attempt to retrieve the associated Faculty instance for the logged-in user
         try:
             faculty = self.request.user.faculty
             if faculty:
@@ -54,11 +55,9 @@ class UserProfile(generics.RetrieveAPIView):
 def fetch_sessions(request):
     if request.method == "GET":
         data = request.data
-        faculty_id = data["faculty_id"]
         batch = data["batch"]
-        faculty = Faculty.objects.get(faculty_id=faculty_id)
         sessions = Session.objects.filter(
-            faculty=faculty, batch=batch, end_time__lte=datetime.now()
+             batch=batch, end_time__lte=datetime.now()
         )
         return Response({"sessions": sessions})
 
@@ -94,14 +93,20 @@ def mark_attendance(request):
 @api_view(["POST"])  # for faculty only
 def create_session(request):
     # check if it faculty
+    # permission_classes = [IsFaculty,]
     if request.method == "POST":
         data = request.data
-        course_id = data["course_id"]
+        faculty = request.user.faculty
+        duration = int(data["duration"])
         batch = data["batch"]
-        duration = data["duration"]
-        course = Course.objects.get(course_id=course_id)
-        session = Session(course=course, batch=batch, duration=duration)
+        #create the session
+        session = Session(batch=batch, duration=duration, faculty=faculty)
         session.save()
+        
+        #increment the total number of classes of the course taken to the batch
+        total_classes = Total_Classes.objects.get_or_create(batch=batch, course=faculty.course_taken)[0]
+        total_classes.total_classes += 1
+        total_classes.save()
         return Response({"sid": session.sid})
 
 

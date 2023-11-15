@@ -28,6 +28,10 @@ class Faculty(models.Model):
     class Meta:
         verbose_name = "Faculty"
         verbose_name_plural = "Faculties"
+    
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Course(models.Model):
@@ -63,7 +67,7 @@ class Classes_Attended(models.Model):
 class Total_Classes(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     batch = models.CharField(max_length=4)
-    total_classes = models.PositiveIntegerField()
+    total_classes = models.PositiveIntegerField(default=0)
     
     class Meta:
         verbose_name = "Total Classes"
