@@ -6,8 +6,10 @@ from .models import Student, Faculty, Course, Session, Classes_Attended, Total_C
 from .serializers import StudentSerializer, FacultySerializer
 from datetime import datetime
 from .utils import find_classes_needed
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class UserProfile(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Student.objects.all()

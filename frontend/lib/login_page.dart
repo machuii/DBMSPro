@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'home_page.dart';
+import 'dart:convert';
 
 String login_key='';
 
@@ -31,7 +32,8 @@ class LoginPageState extends State<LoginPage> {
 
       try {
         if (response.statusCode == 200) {
-          login_key = response.body;
+          Map<String, dynamic> firstresponse = json.decode(response.body);
+          login_key = firstresponse['key'];
           setState(() {
             responseMessage=login_key;
           });
