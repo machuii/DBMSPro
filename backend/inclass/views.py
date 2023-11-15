@@ -161,7 +161,7 @@ def get_attendance_statistics(request):
 def recent_sessions(request):
     if request.method == "GET":
         faculty = request.user.faculty
-        recent_sessions = Session.objects.filter(faculty=faculty).order_by(
-            "-start_time"
+        recent_sessions = list(
+            Session.objects.filter(faculty=faculty).order_by("-start_time").values()
         )[:3]
         return Response(recent_sessions)
