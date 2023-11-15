@@ -13,7 +13,7 @@ with open('faculties.txt', 'r') as file:
     for i in range (0, list_len, 3):
 
         user = User.objects.create_user(username=gen_list[i].strip(), password=gen_list[i].strip())
-        course = Course.objects.get(course_id=gen_list[i + 2])
-        faculty = Faculty(faculty_id=gen_list[i], user=user, name=gen_list[i + 1], course_taken=course)
+        course = Course.objects.get(course_id=gen_list[i + 2].strip())
+        faculty = Faculty(faculty_id=gen_list[i].strip(), user=user, name=gen_list[i + 1].strip(), course_taken=course)
         faculty.save()
     file.close()

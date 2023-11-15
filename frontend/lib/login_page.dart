@@ -5,7 +5,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'home_page.dart';
 import 'dart:convert';
 
+<<<<<<< HEAD
 String login_key = '';
+=======
+var myheaders = {
+  'Authorization': 'Token $login_key'
+};
+
+String login_key='';
+>>>>>>> b1f9b2cbeda32fcca2cc031404d73c28b3c93ef1
 
 class LoginPage extends StatefulWidget {
   @override

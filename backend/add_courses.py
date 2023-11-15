@@ -11,6 +11,6 @@ with open('courses.txt', 'r') as file:
     gen_list = file.readlines()
     list_len = len(gen_list)
     for i in range (0, list_len, 2):
-        course = Course(course_id=gen_list[i], course_name=gen_list[i + 1])
+        course = Course(course_id=gen_list[i].strip(), course_name=gen_list[i + 1].strip())
         course.save()
     file.close()
