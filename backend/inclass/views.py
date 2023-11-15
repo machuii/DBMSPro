@@ -147,7 +147,8 @@ def get_attendance_statistics(request):
         ret = []
         for course_attended in courses_attended:
                 obj = {}
-                obj['course'] = course_attended.course.course_name
+                obj['course_id'] = course_attended.course.course_id
+                obj['course_name'] = course_attended.course.course_name
                 obj['attended'] = course_attended.classes_attended
                 obj['total classes'] = Total_Classes.objects.get_or_create(course=course_attended.course, batch=student.batch)[0].total_classes
                 ret.append(obj)
@@ -171,4 +172,24 @@ def recent_sessions(request):
             }
             ret.append(obj)
         return Response(ret)
-        return Response(recent_sessions)
+
+
+@api_view(["GET"]) # for student view the complete history of a course
+def student_course_history(request):
+    if request.method == "GET":
+        student = request.user.student
+        course = Course.objects.get(course_id=request.GET.get('course_id'))
+        course_sessions = Session.objects.filter(faculty__course_taken=course)
+        ret = []
+        for course_session in course_sessions:
+            obj = {}
+            obj['time'] = course_session.start_time.strftime("%Y-%m-%d %H:%M")
+            obj['faculty'] = course_session.faculty.name
+            if student.attended_sessions.all().filter(sid=course_session.sid):
+                obj['attended'] = "True"
+            else:
+                obj['attended'] = "False"
+
+            ret.append(obj)
+        return Response(ret)
+    
