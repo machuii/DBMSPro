@@ -25,35 +25,37 @@ class HomePage extends State<MyHomePage> {
 
 
   void sendgetrequest() async {
-    var url=Uri.parse('http://localhost:8000/api/profile/');
-   
-    var myheaders={
-      'key': '${login_key}',
-    };
-    logger.i('Request Headers: $myheaders');
+  var url = Uri.parse('http://localhost:8000/api/profile/');
 
+  var myheaders = {
+    'Authorization': 'Token $login_key'
+  };
 
-    final response=await http.get(url, headers: myheaders,); 
-//  logger.i(login_key);
-    try{
-      if(response.statusCode==200){
-        setState(() {
-          logger.i(response.body);
-          response_msg = Map<String,String>.from(json.decode(response.body));
-        });
-        if(response_msg==null){
-          logger.i("null response");
-        }
-        
+  // Print key-value pairs of myheaders
+  myheaders.forEach((key, value) {
+    print('$key: $value');
+  });
+
+  final response = await http.get(url, headers: myheaders);
+
+  try {
+    if (response.statusCode == 200) {
+      setState(() {
+        logger.i(response.body);
+        response_msg = Map<String, String>.from(json.decode(response.body));
+      });
+      if (response_msg == null) {
+        logger.i("null response");
       }
-      else{
-        logger.i(response.statusCode);
-      }
+    } else {
+      logger.i('Error - Status Code: ${response.statusCode}');
+      logger.i('${login_key}');
     }
-    catch(e){
-      logger.i("error: $e");
-    }
+  } catch (e) {
+    logger.i("error: $e");
   }
+}
+
 
   Widget build(BuildContext context) {
     return Scaffold(

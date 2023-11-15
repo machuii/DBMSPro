@@ -7,6 +7,8 @@ from .serializers import StudentSerializer, FacultySerializer, SessionSerializer
 from .permissions import IsFaculty
 from datetime import datetime
 from .utils import find_classes_needed
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 class SessionList(generics.ListAPIView):
