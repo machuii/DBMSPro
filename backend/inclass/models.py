@@ -13,7 +13,7 @@ class Student(models.Model):
     name = models.CharField(max_length=30)
     batch = models.CharField(max_length=4)
     elected_courses = models.ManyToManyField('Course', blank=True)
-    attended_sessions = models.ManyToManyField('Session', blank=True)
+    attended_sessions = models.ManyToManyField('Session', blank=True, related_name="attended_students")
 
     def __str__(self) -> str:
         return self.name

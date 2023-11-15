@@ -59,12 +59,16 @@ class UserProfile(generics.RetrieveAPIView):
 @api_view(["GET"])  # to get sessions when they refresh
 def fetch_sessions(request):
     if request.method == "GET":
-        data = request.data
-        batch = data["batch"]
-        sessions = list(
-            Session.objects.filter(batch=batch, end_time__gte=timezone.now()).values()
-        )
-        return JsonResponse(sessions, safe=False)
+        batch = request.user.student.batch
+        session = Session.objects.filter(batch=batch, end_time__gte=timezone.now()).first()
+        if session is not None:
+            ret = {}
+            ret["sid"] = session.sid
+            ret["course"] = session.faculty.course_taken.course_name
+            ret["end_time"] = session.end_time.strftime("%Y-%m-%d %H:%M")
+            ret["faculty"] = session.faculty.name
+            return Response(ret)
+        return JsonResponse({"Error details" : "no sessions"}, safe=False, status=404)
 
 
 @api_view(["PUT"])  # attendance marking for students
@@ -175,6 +179,16 @@ def recent_sessions(request):
     if request.method == "GET":
         faculty = request.user.faculty
         recent_sessions = list(
-            Session.objects.filter(faculty=faculty).order_by("-start_time").values()
+            Session.objects.filter(faculty=faculty).order_by("-start_time")
         )[:3]
+        ret = []
+        for session in recent_sessions:
+            obj = {
+                "course" : session.faculty.course_taken.course_name,
+                "datetime" : session.start_time.strftime("%Y-%m-%d %H:%M"),
+                "batch" : session.batch,
+                "attendance" : session.attended_students.count()
+            }
+            ret.append(obj)
+        return Response(ret)
         return Response(recent_sessions)
