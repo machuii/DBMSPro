@@ -8,4 +8,7 @@ echo "DONE"
 echo "adding faculties...."
 python3 add_faculties.py
 echo "DONE"
+echo "mapping electives...."
+python3 add_electives.py
+echo "DONE"
 echo "Database created successfully"

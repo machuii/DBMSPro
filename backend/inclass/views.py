@@ -5,12 +5,13 @@ from rest_framework import generics, permissions
 from .models import Student, Faculty, Course, Session, Classes_Attended, Total_Classes
 from .serializers import StudentSerializer, FacultySerializer, SessionSerializer
 from .permissions import IsFaculty
-from datetime import datetime
+from datetime import datetime, timedelta
 from .utils import find_classes_needed
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.utils import timezone
+import os
 
 
 class SessionList(generics.ListAPIView):
@@ -65,7 +66,19 @@ def fetch_sessions(request):
             ret = {}
             ret["sid"] = session.sid
             ret["course"] = session.faculty.course_taken.course_name
-            ret["end_time"] = session.end_time.strftime("%Y-%m-%d %H:%M")
+            ret["end_time"] = (session.end_time + timedelta(hourse=5.5)).strftime("%Y-%m-%d %H:%M")
+            ret["faculty"] = session.faculty.name
+            return Response(ret)
+        #if no main course, look for elective
+        student = request.user.student
+        elective = student.elected_courses.first()
+        session = Session.objects.filter(faculty__course_taken=elective, end_time__gte=timezone.now()).first()
+        if session is not None:
+            ret = {}
+            ret["sid"] = session.sid
+            ret["course"] = session.faculty.course_taken.course_name
+            os.environ["TZ"] = "Asia/Kolkata"
+            ret["end_time"] = (session.end_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M")
             ret["faculty"] = session.faculty.name
             return Response(ret)
         return JsonResponse({"Error details" : "no sessions"}, safe=False, status=404)
@@ -167,7 +180,7 @@ def recent_sessions(request):
         for session in recent_sessions:
             obj = {
                 "course" : session.faculty.course_taken.course_name,
-                "datetime" : session.start_time.strftime("%Y-%m-%d %H:%M"),
+                "datetime" : (session.start_time + timedelta(hourse=5.5)).strftime("%Y-%m-%d %H:%M"),
                 "batch" : session.batch,
                 "attendance" : session.attended_students.count()
             }
@@ -184,7 +197,7 @@ def student_course_history(request):
         ret = []
         for course_session in course_sessions:
             obj = {}
-            obj['time'] = course_session.start_time.strftime("%Y-%m-%d %H:%M")
+            obj['time'] = (course_session.start_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M")
             obj['faculty'] = course_session.faculty.name
             if student.attended_sessions.all().filter(sid=course_session.sid):
                 obj['attended'] = "True"
@@ -194,3 +207,16 @@ def student_course_history(request):
             ret.append(obj)
         return Response(ret)
     
+@api_view(["GET"])
+def attended_students(request):
+    sid = request.GET.get('sid')
+    session = Session.objects.get(sid=sid)
+    attended_students = session.attended_students.all()
+    ret = []
+    for student in attended_students:
+        obj = {}
+        obj['name'] = student.name
+        obj['roll_no'] = student.roll_no
+        ret.append(obj)
+    return Response(ret)
+        

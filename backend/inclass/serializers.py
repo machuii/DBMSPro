@@ -13,9 +13,10 @@ class StudentSerializer(serializers.ModelSerializer):
 class FacultySerializer(serializers.ModelSerializer):
 
     course_taken = serializers.CharField(source='course_taken.course_name')
+    is_elective = serializers.BooleanField(source='course_taken.elective')
     class Meta:
         model = Faculty
-        fields = ("faculty_id", "name", "course_taken")
+        fields = ("faculty_id", "name", "course_taken", "is_elective")
 
 
 class SessionSerializer(serializers.ModelSerializer):
