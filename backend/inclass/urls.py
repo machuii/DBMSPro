@@ -12,7 +12,7 @@ urlpatterns = [
     path("batch_attendance/", batch_students_attendance, name="batch_attendance"),
     path("recent_sessions/", views.recent_sessions, name="recent_sessions"),
     path("course_history/", student_course_history, name="course_history"),
-    path("attended_students", attended_students, name="attended_students"),
+    path("attended_students/", attended_students, name="attended_students"),
     # for testing
     path("sessions/", SessionList.as_view(), name="sessions_list"),
 ]

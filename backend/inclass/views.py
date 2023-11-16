@@ -214,6 +214,9 @@ def attended_students(request):
     attended_students = session.attended_students.all()
     ret = []
     for student in attended_students:
-       ret.append(student.name) 
+        obj = {}
+        obj['name'] = student.name
+        obj['roll_no'] = student.roll_no
+        ret.append(obj)
     return Response(ret)
         

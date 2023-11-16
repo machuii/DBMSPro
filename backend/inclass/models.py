@@ -37,6 +37,7 @@ class Faculty(models.Model):
 class Course(models.Model):
     course_id = models.CharField(primary_key=True, max_length=10)
     course_name = models.CharField(max_length=30)
+    elective = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.course_name
