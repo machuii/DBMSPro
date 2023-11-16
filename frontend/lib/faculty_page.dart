@@ -11,16 +11,43 @@ class MyFacultyPage extends StatefulWidget {
 
 class FacultyPage extends State<MyFacultyPage> {
   List<Map<String, dynamic>> recent_sessions = [];
-  String batch_selected = 'cs01';
+  String batch_selected = 'CS01';
   String active_time = '';
-  List<String> dropdownOptions = ['cs01', 'cs02', 'cs03', 'cs04'];
+  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04'];
   String fac_name = '';
-  Map<String,dynamic>course_sessions={};
+  List<List<dynamic>> course_sessions = [];
+
 
   @override
   void initState() {
     super.initState();
-    fetchData(); // Call the method to send the GET request
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    try {
+      await fetchData();  
+      await fetchcourse(); 
+      setState(() {});
+    } catch (e) {
+      print("Error loading data: $e");
+      // Handle the error as needed
+    }
+  }
+
+  Future<void> fetchcourse() async{
+    try{
+      var new_response= await http.get(Uri.parse('http://localhost:8000/api/course_sessions/'),headers:myheaders);
+      if(new_response.statusCode==200){
+        course_sessions=List<List<dynamic>>.from(jsonDecode(new_response.body));
+      }
+      else{
+        throw Exception("recent_session status code: ${new_response.statusCode}");
+      }
+    }
+    catch(e){
+      print("error: $e");
+    }
   }
 
   Future<void> fetchData() async {
@@ -30,25 +57,10 @@ class FacultyPage extends State<MyFacultyPage> {
         setState(() {
           recent_sessions = List<Map<String, dynamic>>.from(json.decode(response.body));
         });
-        print("${response.body}");
       } else {
         throw Exception("recent_session status code: ${response.statusCode}");
       }
     } catch (e) {
-      print("error: $e");
-    }
-
-    try{
-      var new_response= await http.get(Uri.parse('http://localhost:8000/api/course_sessions/'),headers:myheaders);
-      if(new_response.statusCode==200){
-        course_sessions=Map<String, dynamic>.from(jsonDecode(new_response.body));
-        // print("${new_response.body}");
-      }
-      else{
-        throw Exception("recent_session status code: ${new_response.statusCode}");
-      }
-    }
-    catch(e){
       print("error: $e");
     }
   }
@@ -69,7 +81,7 @@ class FacultyPage extends State<MyFacultyPage> {
       headers: myheaders,
     );
     response_msg = Map<String, String>.from(json.decode(response.body));
-    print(response_msg?['sid']);
+    
     try {
       if (response.statusCode == 200) {
         print(response);
@@ -81,15 +93,19 @@ class FacultyPage extends State<MyFacultyPage> {
     }
   }
 
-  void create_session(String batch_selected, String active_time) {
+  Future<void> create_session(String batch_selected, String active_time) async{
     if (batch_selected == '' || active_time == '') {
       print('select batch and duration');
     } else
-      make_session(batch_selected, active_time);
+      await make_session(batch_selected, active_time);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => MyFacultyPage()),
+      );
   }
 
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
   view_faculty_page();
   return Scaffold(
     appBar: AppBar(
@@ -122,46 +138,81 @@ Widget build(BuildContext context) {
           decoration: InputDecoration(labelText: 'duration'),
         ),
         ElevatedButton(
-          onPressed: () {
-            create_session(batch_selected, active_time);
+          onPressed: () async{
+            await create_session(batch_selected, active_time);
           },
           child: Text('create session'),
         ),
-        // Wrap the Column with Expanded
         Expanded(
-          child: ListView.builder(
-            itemCount: recent_sessions.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(recent_sessions[index]['course'] ?? ''),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(recent_sessions[index]['batch'] ?? ''),
-                    Text(recent_sessions[index]['datetime'] ?? ''),
-                  ],
-                ),
-                leading: Text(
-                  (recent_sessions[index]['attendance']).toString(),
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              );
-            },
+            child: ListView.builder(
+              itemCount: recent_sessions.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    // view_recent_session(recent_sessions[index]['course'],)
+                  },
+                  child: ListTile(
+                    title: Text(recent_sessions[index]['course'] ?? ''),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(recent_sessions[index]['batch'] ?? ''),
+                        Text(recent_sessions[index]['datetime'] ?? ''),
+                      ],
+                    ),
+                    leading: Text(
+                      (recent_sessions[index]['attendance']).toString(),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: course_sessions.length,
-            itemBuilder: (context, index) {
-              final key = course_sessions.keys.elementAt(index);
-              final value = course_sessions[key];
-              print('$key : $value');
-              return ListTile(
-                title: Text('$key : $value'),
-              );
-            },
+          Expanded(
+            child: course_sessions.isEmpty
+                ? Center(
+                    // Display this when course_sessions is empty
+                    child: Text(
+                      '',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : ListView.builder(
+  itemCount: course_sessions.length,
+  itemBuilder: (context, index) {
+    return GestureDetector(
+          onTap: () {
+            
+          },
+          child: Container(
+            margin: EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text(
+                'List ${index + 1}',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${course_sessions[index][0]}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    '${course_sessions[index][1]}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
+        );
+      },
+    ),
+
+          ),
+
       ],
     ),
   );

@@ -41,7 +41,7 @@ class LoginPageState extends State<LoginPage> {
           responseMessage = login_key;
         });
 
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MyHomePage(),
@@ -208,12 +208,6 @@ class LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              responseMessage,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.red),
             ),
           ],
         ),

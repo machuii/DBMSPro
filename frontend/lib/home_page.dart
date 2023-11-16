@@ -31,11 +31,6 @@ class HomePage extends State<MyHomePage> {
   void sendgetrequest() async {
   var url = Uri.parse('http://localhost:8000/api/profile/');
 
-  // Print key-value pairs of myheaders
-  myheaders.forEach((key, value) {
-    print('$key: $value');
-  });
-
   final response = await http.get(url, headers: myheaders);
 
   try {
