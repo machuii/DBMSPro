@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import UserProfile, SessionList, total_course_sessions, batch_students_attendance, student_course_history
+from .views import UserProfile, SessionList, total_course_sessions, batch_students_attendance, student_course_history, attended_students
 
 urlpatterns = [
     path("profile/", UserProfile.as_view(), name="profile"),
@@ -12,6 +12,7 @@ urlpatterns = [
     path("batch_attendance/", batch_students_attendance, name="batch_attendance"),
     path("recent_sessions/", views.recent_sessions, name="recent_sessions"),
     path("course_history/", student_course_history, name="course_history"),
+    path("attended_students", attended_students, name="attended_students"),
     # for testing
     path("sessions/", SessionList.as_view(), name="sessions_list"),
 ]
