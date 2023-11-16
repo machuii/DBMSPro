@@ -1,10 +1,14 @@
 import math
 
 
-def find_classes_needed(attended, total_classes, needed_percentage):
-    num = attended - (needed_percentage * total_classes)
-    denom = needed_percentage - 1
+def classes_needed(attended, total, needed_percentage):
+    current_percentage = (attended / total) * 100
 
-    if denom == 0:
-        return "Not Possible"
-    return math.ceil(num / denom)
+    if current_percentage >= needed_percentage:
+        return 0  # No additional classes needed
+
+    classes_required = (needed_percentage * total - attended * 100) / (
+        100 - needed_percentage
+    )
+
+    return math.ceil(classes_required)
