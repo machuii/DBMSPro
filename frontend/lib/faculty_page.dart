@@ -4,6 +4,7 @@ import 'home_page.dart';
 import 'dart:convert';
 import 'login_page.dart';
 import 'session_page.dart';
+import 'attendance_page.dart';
 
 class MyFacultyPage extends StatefulWidget {
   @override
@@ -79,6 +80,16 @@ class FacultyPage extends State<MyFacultyPage> {
       context,
       MaterialPageRoute(
         builder: (context) => MySessionPage(sid: sid_),
+        settings: RouteSettings(arguments: {'login_key': login_key}),
+      ),
+    );
+  }
+
+  void batch_attended(String batch, int attn){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyAttendancePage(batch: batch,attn: attn),
         settings: RouteSettings(arguments: {'login_key': login_key}),
       ),
     );
@@ -208,7 +219,7 @@ class FacultyPage extends State<MyFacultyPage> {
   itemBuilder: (context, index) {
     return GestureDetector(
           onTap: () {
-            // batch_attended(course_sessions[index][0],course_sessions[index][1]);
+            batch_attended(course_sessions[index][0],course_sessions[index][1]);
           },
           child: Container(
             margin: EdgeInsets.all(8.0),

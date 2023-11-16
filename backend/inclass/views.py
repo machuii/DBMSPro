@@ -6,7 +6,7 @@ from .models import Student, Faculty, Course, Session, Classes_Attended, Total_C
 from .serializers import StudentSerializer, FacultySerializer, SessionSerializer
 from .permissions import IsFaculty
 from datetime import datetime, timedelta
-from .utils import find_classes_needed
+from .utils import classes_needed
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
