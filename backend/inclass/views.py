@@ -144,10 +144,14 @@ def total_course_sessions(request):
 def batch_students_attendance(request):
     if request.method == "GET":
         batch = request.GET.get('batch')
-        students = Student.objects.all().filter(batch=batch)
+        faculty = request.user.faculty
+        if faculty.course_taken.elective is True:
+            students = faculty.course_taken.students_elected.all()
+        else:
+            students = Student.objects.all().filter(batch=batch)
         ret = []
         for student in students:
-            obj = [student.roll_no, student.name, Classes_Attended.objects.get_or_create(student=student, course=request.user.faculty.course_taken)[0].classes_attended]
+            obj = [student.roll_no, student.name, Classes_Attended.objects.get_or_create(student=student, course=faculty.course_taken)[0].classes_attended]
             ret.append(obj)
         return Response(ret)
 
