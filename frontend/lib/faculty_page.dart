@@ -4,6 +4,7 @@ import 'home_page.dart';
 import 'dart:convert';
 import 'login_page.dart';
 import 'session_page.dart';
+import 'attendance_page.dart';
 
 class MyFacultyPage extends StatefulWidget {
   @override
@@ -14,18 +15,22 @@ class FacultyPage extends State<MyFacultyPage> {
   List<Map<String, dynamic>> recent_sessions = [];
   String batch_selected = 'elective';
   String active_time = '';
-  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04','elective'];
+  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04'];
   String fac_name = '';
   List<List<dynamic>> course_sessions = [];
   Map<String, String> sid_list={};
 
 
 
-  @override
-  void initState() {
-    super.initState();
-    loadData();
+@override
+void initState() {
+  super.initState();
+  if (response_msg?['is_elective'] == false) {
+    batch_selected = 'CS01';
   }
+  loadData();
+}
+
 
   Future<void> loadData() async {
     try {
@@ -42,7 +47,10 @@ class FacultyPage extends State<MyFacultyPage> {
     try{
       var new_response= await http.get(Uri.parse('http://localhost:8000/api/course_sessions/'),headers:myheaders);
       if(new_response.statusCode==200){
-        course_sessions=List<List<dynamic>>.from(jsonDecode(new_response.body));
+        setState(() {
+          course_sessions=List<List<dynamic>>.from(jsonDecode(new_response.body));
+        });
+        
       }
       else{
         throw Exception("recent_session status code: ${new_response.statusCode}");
@@ -75,10 +83,21 @@ class FacultyPage extends State<MyFacultyPage> {
   }
 
   void session_details(String ?sid_){
+    print('sid: $sid_');
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MySessionPage(sid: sid_),
+        settings: RouteSettings(arguments: {'login_key': login_key}),
+      ),
+    );
+  }
+
+  void batch_attended(String batch, int attn){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyAttendancePage(batch: batch,attn: attn),
         settings: RouteSettings(arguments: {'login_key': login_key}),
       ),
     );
@@ -93,8 +112,9 @@ class FacultyPage extends State<MyFacultyPage> {
       },
       headers: myheaders,
     );
-    sid_list = Map<String, String>.from(json.decode(response.body));
-    
+    setState(() {
+      sid_list = Map<String, String>.from(json.decode(response.body));
+    });
     try {
       if (response.statusCode == 200) {
         print(response);
@@ -204,37 +224,28 @@ class FacultyPage extends State<MyFacultyPage> {
                     ),
                   )
                 : ListView.builder(
-  itemCount: course_sessions.length,
-  itemBuilder: (context, index) {
-    return GestureDetector(
-          onTap: () {
-            // batch_attended(course_sessions[index][0],course_sessions[index][1]);
-          },
-          child: Container(
-            margin: EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(
-                'List ${index + 1}',
-                style: TextStyle(color: Colors.white),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${course_sessions[index][0]}',
-                    style: TextStyle(color: Colors.white),
+                    itemCount: course_sessions.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          batch_attended(course_sessions[index][0],course_sessions[index][1]);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(8.0),
+                          child: ListTile(
+                            title: Text(
+                                  '${course_sessions[index][0]}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                            subtitle: Text(
+                                  'No. of classes: ${course_sessions[index][1]}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  Text(
-                    '${course_sessions[index][1]}',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    ),
 
           ),
 
