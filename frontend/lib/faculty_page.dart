@@ -85,6 +85,11 @@ void initState() {
   }
 
   void session_details(String ?sid_){
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => MyFacultyPage()),
+    );
     print('sid: $sid_');
     Navigator.push(
       context,

@@ -43,51 +43,61 @@ class AttendancePageState extends State<MyAttendancePage> {
     }
   }
 
+
+  Future<bool> _onWillPop() async {
+    return true;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Attendance Page'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Classes: ${widget.attn}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Attendance Page'),
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Classes: ${widget.attn}',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Expanded(
-            child: batch_students.isEmpty
-                ? Center(
-                    // Display this when attended_students is empty
-                    child: Text(
-                      'No students',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: batch_students.length,
-                    itemBuilder: (context, index) {
-                      if(index<batch_students.length){
-                        return Card(
-                          child: ListTile(
-                            title: Text('Name: ${batch_students[index][1]}'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Roll No: ${batch_students[index][0]}'),
-                                Text('Classes Attended: ${batch_students[index][2]}'),
-                              ],
+            Expanded(
+              child: batch_students.isEmpty
+                  ? Center(
+                      // Display this when attended_students is empty
+                      child: Text(
+                        'No students',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: batch_students.length,
+                      itemBuilder: (context, index) {
+                        if (index < batch_students.length) {
+                          return Card(
+                            child: ListTile(
+                              title: Text('Name: ${batch_students[index][1]}'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Roll No: ${batch_students[index][0]}'),
+                                  Text('Classes Attended: ${batch_students[index][2]}'),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-          ),
-        ],
+                          );
+                        }
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

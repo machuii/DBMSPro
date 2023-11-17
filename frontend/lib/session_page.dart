@@ -46,36 +46,43 @@ class SessionPage extends State<MySessionPage> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    return true; // Return true to allow pop
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Session Page'),
-      ),
-      body: Column(
-        children: [
-          attended_students.isEmpty
-              ? Center(
-                  // Display this when attended_students is empty
-                  child: Text(
-                    'No attended students',
-                    style: TextStyle(color: Colors.black),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Session Page'),
+        ),
+        body: Column(
+          children: [
+            attended_students.isEmpty
+                ? Center(
+                    // Display this when attended_students is empty
+                    child: Text(
+                      'No attended students',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: attended_students.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: ListTile(
+                            title: Text(attended_students[index]['name']),
+                            subtitle: Text(attended_students[index]['roll_no']),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                )
-              : Expanded(
-                  child: ListView.builder(
-                    itemCount: attended_students.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          title: Text(attended_students[index]['name']),
-                          subtitle: Text(attended_students[index]['roll_no']),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }
