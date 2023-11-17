@@ -28,7 +28,7 @@ class SessionPage extends State<MySessionPage> {
   void send_session(String ?sid) async{
     try{
       String encodedSearchString = Uri.encodeComponent(sid??'null');
-      apiUrl = 'https://loaclhost:8000/api/attended_students/?sid=$encodedSearchString';
+      apiUrl = 'http://localhost:8000/api/attended_students/?sid=$encodedSearchString';
       var response = await http.get(
         Uri.parse(apiUrl),
         headers: myheaders,
