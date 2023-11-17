@@ -143,11 +143,11 @@ def total_course_sessions(request):
 @api_view(["GET"]) # for faculty to see the the attendance of all the students of a batches
 def batch_students_attendance(request):
     if request.method == "GET":
-        batch = request.GET.get('batch')
         faculty = request.user.faculty
         if faculty.course_taken.elective is True:
             students = faculty.course_taken.students_elected.all()
         else:
+            batch = request.GET.get('batch')
             students = Student.objects.all().filter(batch=batch)
         ret = []
         for student in students:
