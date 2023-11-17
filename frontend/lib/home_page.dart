@@ -29,6 +29,10 @@ class HomePage extends State<MyHomePage> {
 
 
   void sendgetrequest() async {
+
+    setState(() {
+      response_msg={};
+    });
   var url = Uri.parse('http://localhost:8000/api/profile/');
 
   final response = await http.get(url, headers: myheaders);
@@ -50,7 +54,7 @@ class HomePage extends State<MyHomePage> {
         :Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MyStudentPage(),
+            builder: (context) => MyFacultyPage(),
             settings: RouteSettings(arguments: {'login_key': login_key}),
           ),
         );

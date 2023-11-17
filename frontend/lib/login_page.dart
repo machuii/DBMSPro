@@ -36,11 +36,15 @@ class LoginPageState extends State<LoginPage> {
     try {
       if (response.statusCode == 200) {
         Map<String, dynamic> firstresponse = json.decode(response.body);
-        login_key = firstresponse['key'];
+        setState(() {
+          login_key = firstresponse['key'];
+          myheaders = {
+            'Authorization': 'Token $login_key'
+          };
+        });
         setState(() {
           responseMessage = login_key;
         });
-        print(login_key);
         Navigator.push(
           context,
           MaterialPageRoute(

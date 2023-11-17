@@ -44,6 +44,7 @@ void initState() {
   }
 
   Future<void> fetchcourse() async{
+    
     try{
       var new_response= await http.get(Uri.parse('http://localhost:8000/api/course_sessions/'),headers:myheaders);
       if(new_response.statusCode==200){
@@ -68,6 +69,7 @@ void initState() {
         setState(() {
           recent_sessions = List<Map<String, dynamic>>.from(json.decode(response.body));
         });
+        print(myheaders);
       } else {
         throw Exception("recent_session status code: ${response.statusCode}");
       }
