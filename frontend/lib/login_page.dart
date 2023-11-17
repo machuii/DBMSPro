@@ -282,6 +282,15 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 30,),
+                Text(
+                  responseMessage, 
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    color: Color(0xffff0000),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ],
             ),
           ),
