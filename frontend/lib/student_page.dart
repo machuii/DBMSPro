@@ -1,45 +1,74 @@
+import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'home_page.dart';
-import 'dart:convert';
 import 'login_page.dart';
 
-class MyStudentPage extends StatefulWidget {
+String displayText = 'Mark Attendance';
+
+class AttendanceWidget extends StatefulWidget {
+  const AttendanceWidget({super.key});
+
   @override
-  StudentPage createState() => StudentPage();
+  State<AttendanceWidget> createState() => _AttendanceWidgetState();
 }
 
+class _AttendanceWidgetState extends State<AttendanceWidget> {
+  //when pressed send a get request to backend and change text based on response
 
-class StudentPage extends State<MyStudentPage> {
-
-  String batch_selected = '';
-  String active_time='';
-  List<String> dropdownOptions = ['cs01', 'cs02', 'cs03', 'cs04'];
-
-  String stu_name='';
-
-  void view_student_page(){
+  void updateTextsuccess() {
     setState(() {
-      stu_name=response_msg?['name'] ?? 'null';
+      displayText = "Attendance Marked";
     });
   }
 
+  void updateTextfailure() {
+    setState(() {
+      displayText = "Timed out";
+    });
+  }
+
+  Future<void> checkAttendance() async {
+    try {
+      final response = await http.get(
+          Uri.parse('http://localhost:8000/api/mark_attendance/'),
+          headers: myheaders);
+      Logger().i("Status Code : ${response.statusCode}");
+      if (response.statusCode == 200) {
+        //change text
+        print('Attendance marked');
+        updateTextsuccess();
+      } else {
+        //change text
+        updateTextfailure();
+        //log the status code
+        Logger().i("Status Code : ${response.statusCode}");
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    view_student_page();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('student'),
+    return Container(
+      child: ElevatedButton(
+        onPressed: checkAttendance,
+        child: Container(
+            width: 100,
+            height: 100,
+            child: Text(displayText,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                )),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: Colors.green, spreadRadius: 3),
+              ],
+            )),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children:[
-          Text(stu_name),
-        ],
-      ),
-      
     );
   }
 }
