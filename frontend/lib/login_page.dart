@@ -40,7 +40,7 @@ class LoginPageState extends State<LoginPage> {
         setState(() {
           responseMessage = login_key;
         });
-
+        print(login_key);
         Navigator.push(
           context,
           MaterialPageRoute(

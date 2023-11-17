@@ -32,7 +32,9 @@ class AttendancePageState extends State<MyAttendancePage> {
       );
 
       if (response.statusCode == 200) {
-        batch_students = List<List<dynamic>>.from(json.decode(response.body));
+        setState(() {
+          batch_students = List<List<dynamic>>.from(json.decode(response.body));
+        });
       } else {
         print("response code: ${response.statusCode}");
       }
@@ -68,18 +70,20 @@ class AttendancePageState extends State<MyAttendancePage> {
                 : ListView.builder(
                     itemCount: batch_students.length,
                     itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          title: Text('Name: ${batch_students[index][1]}'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Roll No: ${batch_students[index][0]}'),
-                              Text('Classes Attended: ${batch_students[index][2]}'),
-                            ],
+                      if(index<batch_students.length){
+                        return Card(
+                          child: ListTile(
+                            title: Text('Name: ${batch_students[index][1]}'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Roll No: ${batch_students[index][0]}'),
+                                Text('Classes Attended: ${batch_students[index][2]}'),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                   ),
           ),
