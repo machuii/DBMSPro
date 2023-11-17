@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'home_page.dart';
 import 'dart:convert';
 
@@ -92,8 +91,8 @@ class LoginPageState extends State<LoginPage> {
                       Text(
                         'Login to InClass',
                         style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 30,
+                          fontFamily: 'Montserrat',
+                          fontSize: 28,
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                         ),
@@ -110,9 +109,9 @@ class LoginPageState extends State<LoginPage> {
                       Text(
                         'Please sign in to continue',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: 'Montserrat',
                           color: Color(0xFFBAAFD8),
-                          fontWeight: FontWeight.w200,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
                     ],
@@ -138,7 +137,7 @@ class LoginPageState extends State<LoginPage> {
                               child: Text(
                                 'STUDENT',
                                 style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w700,
                                   fontSize: 13,
                                   color: selectedButton == 'STUDENT'
@@ -174,7 +173,7 @@ class LoginPageState extends State<LoginPage> {
                               child: Text(
                                 'FACULTY',
                                 style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w700,
                                   fontSize: 13,
                                   color: selectedButton == 'FACULTY'
@@ -209,7 +208,7 @@ class LoginPageState extends State<LoginPage> {
                     controller: usernameController,
                     style: TextStyle(
                       color: Colors.white,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.8,
                     ),
@@ -235,7 +234,7 @@ class LoginPageState extends State<LoginPage> {
                     controller: passwordController,
                     style: TextStyle(
                       color: Colors.white,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.8,
                     ),
@@ -253,7 +252,7 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30,),
+                SizedBox(height: 35,),
                 SizedBox(
                   width: 100,
                   child: ElevatedButton(
@@ -266,7 +265,8 @@ class LoginPageState extends State<LoginPage> {
                         child: Text(
                           'LOGIN',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF201A30),
                             letterSpacing: 1,
@@ -282,6 +282,16 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 17,),
+                // Text(
+                //   'Forgot Password?',
+                //   style: TextStyle(
+                //     fontFamily: 'Montserrat',
+                //     fontWeight: FontWeight.w500,
+                //     fontSize: 12,
+                //     color: Color(0xFF0DF5E3),
+                //   ),
+                // )
               ],
             ),
           ),
