@@ -15,18 +15,22 @@ class FacultyPage extends State<MyFacultyPage> {
   List<Map<String, dynamic>> recent_sessions = [];
   String batch_selected = 'elective';
   String active_time = '';
-  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04','elective'];
+  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04'];
   String fac_name = '';
   List<List<dynamic>> course_sessions = [];
   Map<String, String> sid_list={};
 
 
 
-  @override
-  void initState() {
-    super.initState();
-    loadData();
+@override
+void initState() {
+  super.initState();
+  if (response_msg?['is_elective'] == false) {
+    batch_selected = 'CS01';
   }
+  loadData();
+}
+
 
   Future<void> loadData() async {
     try {
