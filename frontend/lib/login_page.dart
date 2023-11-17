@@ -20,7 +20,7 @@ class LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   String responseMessage = '';
-  String selectedButton = '';
+  String selectedButton = 'STUDENT';
 
   Future<void> sendLoginData(String username, String password) async {
     var logger = Logger();
@@ -78,68 +78,90 @@ class LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Login to InClass',
-              style: GoogleFonts.righteous(fontSize: 24, color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.symmetric(hori8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Login to InClass',
+                    style: GoogleFonts.righteous(fontSize: 24, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 30),  // Increased distance from the 'Login to InClass' text to the 'STUDENT' button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedButton = 'STUDENT';
-                    });
-                  },
-                  child: Text(
-                    'STUDENT',
-                    style: TextStyle(
-                      color: selectedButton == 'STUDENT'
-                          ? Color(0xFF201A30)
-                          : Color(0xFF9A8AC4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: SizedBox(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedButton = 'STUDENT';
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(13.0),
+                          child: Text(
+                            'STUDENT',
+                            style: TextStyle(
+                              color: selectedButton == 'STUDENT'
+                                  ? Color(0xFF201A30)
+                                  : Color(0xFF9A8AC4),
+                            ),
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: selectedButton == 'STUDENT'
+                              ? Colors.white
+                              : Color(0xFF201A30),
+                          onPrimary: Color(0xFF201A30),
+                          side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ), // Adjust width and height as needed
+                        ),
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: selectedButton == 'STUDENT'
-                        ? Colors.white
-                        : Color(0xFF201A30),
-                    onPrimary: Color(0xFF201A30),
-                    side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedButton = 'FACULTY';
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(13.0),
+                          child: Text(
+                            'FACULTY',
+                            style: TextStyle(
+                              color: selectedButton == 'FACULTY'
+                                  ? Color(0xFF201A30)
+                                  : Color(0xFF9A8AC4),
+                            ),
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: selectedButton == 'FACULTY'
+                              ? Colors.white
+                              : Color(0xFF201A30),
+                          onPrimary: Color(0xFF201A30),
+                          side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ), // Adjust width and height as needed
+                        ),
+                      ),
                     ),
-                    minimumSize: Size(215, 50), // Adjust width and height as needed
-                  ),
+                  ],
                 ),
-                SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedButton = 'FACULTY';
-                    });
-                  },
-                  child: Text(
-                    'FACULTY',
-                    style: TextStyle(
-                      color: selectedButton == 'FACULTY'
-                          ? Color(0xFF201A30)
-                          : Color(0xFF9A8AC4),
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: selectedButton == 'FACULTY'
-                        ? Colors.white
-                        : Color(0xFF201A30),
-                    onPrimary: Color(0xFF201A30),
-                    side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    minimumSize: Size(215, 50), // Adjust width and height as needed
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(height: 20),
             Padding(
