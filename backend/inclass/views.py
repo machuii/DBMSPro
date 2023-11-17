@@ -6,7 +6,7 @@ from .models import Student, Faculty, Course, Session, Classes_Attended, Total_C
 from .serializers import StudentSerializer, FacultySerializer, SessionSerializer
 from .permissions import IsFaculty
 from datetime import datetime, timedelta
-from .utils import find_classes_needed
+from .utils import classes_needed
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
@@ -61,27 +61,35 @@ class UserProfile(generics.RetrieveAPIView):
 def fetch_sessions(request):
     if request.method == "GET":
         batch = request.user.student.batch
-        session = Session.objects.filter(batch=batch, end_time__gte=timezone.now()).first()
+        session = Session.objects.filter(
+            batch=batch, end_time__gte=timezone.now()
+        ).first()
         if session is not None:
             ret = {}
             ret["sid"] = session.sid
             ret["course"] = session.faculty.course_taken.course_name
-            ret["end_time"] = (session.end_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M")
+            ret["end_time"] = (session.end_time + timedelta(hours=5.5)).strftime(
+                "%Y-%m-%d %H:%M"
+            )
             ret["faculty"] = session.faculty.name
             return Response(ret)
-        #if no main course, look for elective
+        # if no main course, look for elective
         student = request.user.student
         elective = student.elected_courses.first()
-        session = Session.objects.filter(faculty__course_taken=elective, end_time__gte=timezone.now()).first()
+        session = Session.objects.filter(
+            faculty__course_taken=elective, end_time__gte=timezone.now()
+        ).first()
         if session is not None:
             ret = {}
             ret["sid"] = session.sid
             ret["course"] = session.faculty.course_taken.course_name
             os.environ["TZ"] = "Asia/Kolkata"
-            ret["end_time"] = (session.end_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M")
+            ret["end_time"] = (session.end_time + timedelta(hours=5.5)).strftime(
+                "%Y-%m-%d %H:%M"
+            )
             ret["faculty"] = session.faculty.name
             return Response(ret)
-        return JsonResponse({"Error details" : "no sessions"}, safe=False, status=404)
+        return JsonResponse({"Error details": "no sessions"}, safe=False, status=404)
 
 
 @api_view(["PUT"])  # attendance marking for students
@@ -97,7 +105,9 @@ def mark_attendance(request):
         else:
             student = request.user.student
             student.attended_sessions.add(session)
-            student_course = Classes_Attended.objects.get_or_create(course=session.faculty.course_taken, student=student)[0]
+            student_course = Classes_Attended.objects.get_or_create(
+                course=session.faculty.course_taken, student=student
+            )[0]
             student_course.classes_attended += 1
             student_course.save()
             return Response({"Attendace marked successfully"})
@@ -125,8 +135,9 @@ def create_session(request):
         return Response({"sid": session.sid})
 
 
-
-@api_view(["GET"]) # for aculty to see the total number of classes of his course to each batch
+@api_view(
+    ["GET"]
+)  # for aculty to see the total number of classes of his course to each batch
 def total_course_sessions(request):
     if request.method == "GET":
         course_sessions = Total_Classes.objects.all().filter(
@@ -139,18 +150,24 @@ def total_course_sessions(request):
         return Response(ret)
 
 
-
-@api_view(["GET"]) # for faculty to see the the attendance of all the students of a batches
+@api_view(
+    ["GET"]
+)  # for faculty to see the the attendance of all the students of a batches
 def batch_students_attendance(request):
     if request.method == "GET":
-        batch = request.GET.get('batch')
+        batch = request.GET.get("batch")
         students = Student.objects.all().filter(batch=batch)
         ret = []
         for student in students:
-            obj = [student.roll_no, student.name, Classes_Attended.objects.get_or_create(student=student, course=request.user.faculty.course_taken)[0].classes_attended]
+            obj = [
+                student.roll_no,
+                student.name,
+                Classes_Attended.objects.get_or_create(
+                    student=student, course=request.user.faculty.course_taken
+                )[0].classes_attended,
+            ]
             ret.append(obj)
         return Response(ret)
-
 
 
 @api_view(["GET"])  # for individual student
@@ -160,12 +177,14 @@ def get_attendance_statistics(request):
         courses_attended = Classes_Attended.objects.all().filter(student=student)
         ret = []
         for course_attended in courses_attended:
-                obj = {}
-                obj['course_id'] = course_attended.course.course_id
-                obj['course_name'] = course_attended.course.course_name
-                obj['attended'] = course_attended.classes_attended
-                obj['total classes'] = Total_Classes.objects.get_or_create(course=course_attended.course, batch=student.batch)[0].total_classes
-                ret.append(obj)
+            obj = {}
+            obj["course_id"] = course_attended.course.course_id
+            obj["course_name"] = course_attended.course.course_name
+            obj["attended"] = course_attended.classes_attended
+            obj["total classes"] = Total_Classes.objects.get_or_create(
+                course=course_attended.course, batch=student.batch
+            )[0].total_classes
+            ret.append(obj)
         return Response(ret)
 
 
@@ -179,44 +198,48 @@ def recent_sessions(request):
         ret = []
         for session in recent_sessions:
             obj = {
-                "course" : session.faculty.course_taken.course_name,
-                "datetime" : (session.start_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M"),
-                "batch" : session.batch,
-                "attendance" : session.attended_students.count()
+                "course": session.faculty.course_taken.course_name,
+                "datetime": (session.start_time + timedelta(hours=5.5)).strftime(
+                    "%Y-%m-%d %H:%M"
+                ),
+                "batch": session.batch,
+                "attendance": session.attended_students.count(),
             }
             ret.append(obj)
         return Response(ret)
 
 
-@api_view(["GET"]) # for student view the complete history of a course
+@api_view(["GET"])  # for student view the complete history of a course
 def student_course_history(request):
     if request.method == "GET":
         student = request.user.student
-        course = Course.objects.get(course_id=request.GET.get('course_id'))
+        course = Course.objects.get(course_id=request.GET.get("course_id"))
         course_sessions = Session.objects.filter(faculty__course_taken=course)
         ret = []
         for course_session in course_sessions:
             obj = {}
-            obj['time'] = (course_session.start_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M")
-            obj['faculty'] = course_session.faculty.name
+            obj["time"] = (course_session.start_time + timedelta(hours=5.5)).strftime(
+                "%Y-%m-%d %H:%M"
+            )
+            obj["faculty"] = course_session.faculty.name
             if student.attended_sessions.all().filter(sid=course_session.sid):
-                obj['attended'] = "True"
+                obj["attended"] = "True"
             else:
-                obj['attended'] = "False"
+                obj["attended"] = "False"
 
             ret.append(obj)
         return Response(ret)
-    
+
+
 @api_view(["GET"])
 def attended_students(request):
-    sid = request.GET.get('sid')
+    sid = request.GET.get("sid")
     session = Session.objects.get(sid=sid)
     attended_students = session.attended_students.all()
     ret = []
     for student in attended_students:
         obj = {}
-        obj['name'] = student.name
-        obj['roll_no'] = student.roll_no
+        obj["name"] = student.name
+        obj["roll_no"] = student.roll_no
         ret.append(obj)
     return Response(ret)
-        
