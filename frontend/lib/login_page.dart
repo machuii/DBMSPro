@@ -282,16 +282,15 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 17,),
-                // Text(
-                //   'Forgot Password?',
-                //   style: TextStyle(
-                //     fontFamily: 'Montserrat',
-                //     fontWeight: FontWeight.w500,
-                //     fontSize: 12,
-                //     color: Color(0xFF0DF5E3),
-                //   ),
-                // )
+                SizedBox(height: 30,),
+                Text(
+                  responseMessage, 
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Color(0xffff0000),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ],
             ),
           ),
