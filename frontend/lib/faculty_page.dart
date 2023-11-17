@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'home_page.dart';
 import 'dart:convert';
 import 'login_page.dart';
+import 'session_page.dart';
+import 'attendance_page.dart';
 
 class MyFacultyPage extends StatefulWidget {
   @override
@@ -11,11 +13,13 @@ class MyFacultyPage extends StatefulWidget {
 
 class FacultyPage extends State<MyFacultyPage> {
   List<Map<String, dynamic>> recent_sessions = [];
-  String batch_selected = 'CS01';
+  String batch_selected = 'elective';
   String active_time = '';
-  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04'];
+  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04','elective'];
   String fac_name = '';
   List<List<dynamic>> course_sessions = [];
+  Map<String, String> sid_list={};
+
 
 
   @override
@@ -71,6 +75,26 @@ class FacultyPage extends State<MyFacultyPage> {
     });
   }
 
+  void session_details(String ?sid_){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MySessionPage(sid: sid_),
+        settings: RouteSettings(arguments: {'login_key': login_key}),
+      ),
+    );
+  }
+
+  void batch_attended(String batch, int attn){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyAttendancePage(batch: batch,attn: attn),
+        settings: RouteSettings(arguments: {'login_key': login_key}),
+      ),
+    );
+  }
+
   Future<void> make_session(String batch, String duration) async {
     final response = await http.post(
       Uri.parse('http://localhost:8000/api/create_session/'),
@@ -80,7 +104,7 @@ class FacultyPage extends State<MyFacultyPage> {
       },
       headers: myheaders,
     );
-    response_msg = Map<String, String>.from(json.decode(response.body));
+    sid_list = Map<String, String>.from(json.decode(response.body));
     
     try {
       if (response.statusCode == 200) {
@@ -96,13 +120,16 @@ class FacultyPage extends State<MyFacultyPage> {
   Future<void> create_session(String batch_selected, String active_time) async{
     if (batch_selected == '' || active_time == '') {
       print('select batch and duration');
-    } else
+    } 
+    else{
       await make_session(batch_selected, active_time);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => MyFacultyPage()),
-      );
-  }
+    }
+      
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => MyFacultyPage()),
+    );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -115,20 +142,22 @@ class FacultyPage extends State<MyFacultyPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(fac_name),
-        DropdownButton<String>(
-          value: batch_selected,
-          items: dropdownOptions.map((String option) {
-            return DropdownMenuItem<String>(
-              value: option,
-              child: Text(option),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              batch_selected = newValue!;
-            });
-          },
-        ),
+        SizedBox(height: 16),
+        if (!(response_msg?['is_elective'] ?? false))
+          DropdownButton<String>(
+            value: batch_selected,
+            items: dropdownOptions.map((String option) {
+              return DropdownMenuItem<String>(
+                value: option,
+                child: Text(option),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                batch_selected = newValue!;
+              });
+            },
+          ),
         TextField(
           onChanged: (text) {
             setState(() {
@@ -144,35 +173,42 @@ class FacultyPage extends State<MyFacultyPage> {
           child: Text('create session'),
         ),
         Expanded(
-            child: ListView.builder(
-              itemCount: recent_sessions.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    // view_recent_session(recent_sessions[index]['course'],)
-                  },
-                  child: ListTile(
-                    title: Text(recent_sessions[index]['course'] ?? ''),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(recent_sessions[index]['batch'] ?? ''),
-                        Text(recent_sessions[index]['datetime'] ?? ''),
-                      ],
+          child: recent_sessions.isEmpty
+            ? Center(
+                child: Text(
+                  'is empty',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            : ListView.builder(
+                itemCount: recent_sessions.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      session_details(sid_list['sid']);
+                    },
+                    child: ListTile(
+                      title: Text(recent_sessions[index]['course'] ?? ''),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(recent_sessions[index]['batch'] ?? ''),
+                          Text(recent_sessions[index]['datetime'] ?? ''),
+                        ],
+                      ),
+                      leading: Text(
+                        (recent_sessions[index]['attendance']).toString(),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    leading: Text(
-                      (recent_sessions[index]['attendance']).toString(),
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+                  );
+                },
+              ),
+        ),
+
           Expanded(
             child: course_sessions.isEmpty
                 ? Center(
-                    // Display this when course_sessions is empty
                     child: Text(
                       '',
                       style: TextStyle(color: Colors.white),
@@ -183,7 +219,7 @@ class FacultyPage extends State<MyFacultyPage> {
   itemBuilder: (context, index) {
     return GestureDetector(
           onTap: () {
-            
+            batch_attended(course_sessions[index][0],course_sessions[index][1]);
           },
           child: Container(
             margin: EdgeInsets.all(8.0),
@@ -218,3 +254,4 @@ class FacultyPage extends State<MyFacultyPage> {
   );
 }
 }
+

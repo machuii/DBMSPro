@@ -6,7 +6,7 @@ from .models import Student, Faculty, Course, Session, Classes_Attended, Total_C
 from .serializers import StudentSerializer, FacultySerializer, SessionSerializer
 from .permissions import IsFaculty
 from datetime import datetime, timedelta
-from .utils import find_classes_needed
+from .utils import classes_needed
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
@@ -66,7 +66,7 @@ def fetch_sessions(request):
             ret = {}
             ret["sid"] = session.sid
             ret["course"] = session.faculty.course_taken.course_name
-            ret["end_time"] = (session.end_time + timedelta(hourse=5.5)).strftime("%Y-%m-%d %H:%M")
+            ret["end_time"] = (session.end_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M")
             ret["faculty"] = session.faculty.name
             return Response(ret)
         #if no main course, look for elective
@@ -180,7 +180,7 @@ def recent_sessions(request):
         for session in recent_sessions:
             obj = {
                 "course" : session.faculty.course_taken.course_name,
-                "datetime" : (session.start_time + timedelta(hourse=5.5)).strftime("%Y-%m-%d %H:%M"),
+                "datetime" : (session.start_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M"),
                 "batch" : session.batch,
                 "attendance" : session.attended_students.count()
             }

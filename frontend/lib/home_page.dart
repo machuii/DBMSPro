@@ -9,7 +9,7 @@ import 'login_page.dart';
 
 
 var logger=Logger();
-Map<String,String>? response_msg={};
+Map<String,dynamic>? response_msg={};
 
 
 class MyHomePage extends StatefulWidget{
@@ -21,7 +21,7 @@ class MyHomePage extends StatefulWidget{
 class HomePage extends State<MyHomePage> {
 
   @override
-
+  
   void initState(){
     super.initState();
     sendgetrequest();
@@ -37,7 +37,7 @@ class HomePage extends State<MyHomePage> {
     if (response.statusCode == 200) {
       setState(() {
         logger.i(response.body);
-        response_msg = Map<String, String>.from(json.decode(response.body));
+        response_msg = Map<String, dynamic>.from(json.decode(response.body));
       });
       (response_msg != null && response_msg?['roll_no'] == null)
       ? Navigator.pushReplacement(
