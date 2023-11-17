@@ -74,164 +74,213 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Color(0xFF201A30),
       body: Padding(
-        padding: EdgeInsets.all(64.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(hori8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Login to InClass',
-                    style: GoogleFonts.righteous(fontSize: 24, color: Colors.white),
+        padding: EdgeInsets.all(45.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 17.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Login to InClass',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 30),  // Increased distance from the 'Login to InClass' text to the 'STUDENT' button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: SizedBox(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            selectedButton = 'STUDENT';
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Text(
-                            'STUDENT',
-                            style: TextStyle(
-                              color: selectedButton == 'STUDENT'
-                                  ? Color(0xFF201A30)
-                                  : Color(0xFF9A8AC4),
+                ),
+                SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 17.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Please sign in to continue',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          color: Color(0xFFBAAFD8),
+                          fontWeight: FontWeight.w200,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),  // Increased distance from the 'Login to InClass' text to the 'STUDENT' button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SizedBox(
+                    height: 90,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedButton = 'STUDENT';
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 13.0),
+                              child: Text(
+                                'STUDENT',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
+                                  color: selectedButton == 'STUDENT'
+                                      ? Color(0xFF201A30)
+                                      : Color(0xFF9A8AC4),
+                                ),
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: selectedButton == 'STUDENT'
+                                  ? Colors.white
+                                  : Color(0xFF201A30),
+                              onPrimary: Color(0xFF201A30),
+                              side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(13),
+                                  bottomLeft: Radius.circular(13),
+                                ),
+                              ), // Adjust width and height as needed
                             ),
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          primary: selectedButton == 'STUDENT'
-                              ? Colors.white
-                              : Color(0xFF201A30),
-                          onPrimary: Color(0xFF201A30),
-                          side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ), // Adjust width and height as needed
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            selectedButton = 'FACULTY';
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Text(
-                            'FACULTY',
-                            style: TextStyle(
-                              color: selectedButton == 'FACULTY'
-                                  ? Color(0xFF201A30)
-                                  : Color(0xFF9A8AC4),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedButton = 'FACULTY';
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 13.0),
+                              child: Text(
+                                'FACULTY',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
+                                  color: selectedButton == 'FACULTY'
+                                      ? Color(0xFF201A30)
+                                      : Color(0xFF9A8AC4),
+                                ),
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: selectedButton == 'FACULTY'
+                                  ? Colors.white
+                                  : Color(0xFF201A30),
+                              onPrimary: Color(0xFF201A30),
+                              side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(13),
+                                  bottomRight: Radius.circular(13),
+                                )
+                              ), // Adjust width and height as needed
                             ),
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          primary: selectedButton == 'FACULTY'
-                              ? Colors.white
-                              : Color(0xFF201A30),
-                          onPrimary: Color(0xFF201A30),
-                          side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ), // Adjust width and height as needed
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: TextField(
+                    controller: usernameController,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.8,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'USERNAME',
+                      labelStyle: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                      fillColor: Color(0xFF686666),
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 30),  // Increased distance from the username input box to the password input box
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: TextField(
+                    obscureText: true,
+                    controller: passwordController,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.8,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'PASSWORD',
+                      labelStyle: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                      fillColor: Color(0xFF686666),
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 30,),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _login();
+                    },
+                    child: Container(
+                      height: 50,
+                      child: Center(
+                        child: Text(
+                          'LOGIN',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF201A30),
+                            letterSpacing: 1,
+                          ),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: TextField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  labelText: 'USERNAME',
-                  labelStyle: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                  fillColor: Color(0xFF686666),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 30),  // Increased distance from the username input box to the password input box
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: 'PASSWORD',
-                  labelStyle: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                  fillColor: Color(0xFF686666),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 50),
-            SizedBox(
-              width: 120,
-              child: ElevatedButton(
-                onPressed: () {
-                  _login();
-                },
-                child: Container(
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      'LOGIN',
-                      style: TextStyle(
-                        fontFamily: 'Lato',
-                        color: Color(0xFF201A30),
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1,
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF0DF5E3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF0DF5E3),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

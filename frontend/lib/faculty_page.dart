@@ -15,7 +15,7 @@ class FacultyPage extends State<MyFacultyPage> {
   List<Map<String, dynamic>> recent_sessions = [];
   String batch_selected = 'elective';
   String active_time = '';
-  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04','elective'];
+  List<String> dropdownOptions = ['CS01', 'CS02', 'CS03', 'CS04','Elective'];
   String fac_name = '';
   List<List<dynamic>> course_sessions = [];
   Map<String, String> sid_list={};
