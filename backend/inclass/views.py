@@ -186,7 +186,8 @@ def recent_sessions(request):
                 "course" : session.faculty.course_taken.course_name,
                 "datetime" : (session.start_time + timedelta(hours=5.5)).strftime("%Y-%m-%d %H:%M"),
                 "batch" : session.batch,
-                "attendance" : session.attended_students.count()
+                "attendance" : session.attended_students.count(),
+                "sid" : session.sid
             }
             ret.append(obj)
         return Response(ret)

@@ -194,7 +194,7 @@ void initState() {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      session_details(sid_list['sid']);
+                      session_details(recent_sessions[index]['sid']);
                     },
                     child: ListTile(
                       title: Text(recent_sessions[index]['course'] ?? ''),
