@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'home_page.dart';
 import 'dart:convert';
 import 'login_page.dart';
+import 'dart:async';
 
 List<Map<dynamic, dynamic>> attended_students = [];
 String apiUrl = '';
@@ -16,16 +17,25 @@ class MySessionPage extends StatefulWidget {
 }
 
 class SessionPage extends State<MySessionPage> {
+
+  late Timer _timer;
   @override
   void initState() {
     super.initState();
     send_session(widget.sid);
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      _refreshData();
+    });
   }
 
-  void send_session(String? sid) async {
+  Future<void> _refreshData() async{
+    await send_session(widget.sid);
+  }
+
+
+  Future<void> send_session(String? sid) async {
     try {
       String encodedSearchString = Uri.encodeComponent(sid ?? 'null');
-      print("encoded: $encodedSearchString");
       apiUrl = '$END_POINT/api/attended_students/?sid=$encodedSearchString';
       var response = await http.get(
         Uri.parse(apiUrl),
@@ -158,5 +168,11 @@ class SessionPage extends State<MySessionPage> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    // Cancel the timer when the page is disposed to avoid memory leaks
+    _timer.cancel();
+    super.dispose();
   }
 }
