@@ -18,12 +18,11 @@ class MyStudentPage extends StatefulWidget {
 }
 
 class StudentPage extends State<MyStudentPage> {
-
   late Timer _timer;
-  Map<String,String> curr_session={};
-  int status_code=0,att_status=1;
-  int att_marked=0;
-  List<Map<String,dynamic>> course_att=[];
+  Map<String, String> curr_session = {};
+  int status_code = 0, att_status = 1;
+  int att_marked = 0;
+  List<Map<String, dynamic>> course_att = [];
 
   @override
   void initState() {
@@ -34,24 +33,23 @@ class StudentPage extends State<MyStudentPage> {
     });
   }
 
-  Future<void> _refreshData() async{
+  Future<void> _refreshData() async {
     await check_sessions();
   }
 
-  Future<void> check_sessions() async{
+  Future<void> check_sessions() async {
     try {
-      final response = await http.get(
-          Uri.parse('$END_POINT/api/fetch_sessions/'),
-          headers: myheaders);
+      final response = await http
+          .get(Uri.parse('$END_POINT/api/fetch_sessions/'), headers: myheaders);
       if (response.statusCode == 200) {
         setState(() {
-          curr_session=Map<String,String>.from(jsonDecode(response.body));
-          status_code=1;
+          curr_session = Map<String, String>.from(jsonDecode(response.body));
+          status_code = 1;
         });
-      } else if(response.statusCode==404){
+      } else if (response.statusCode == 404) {
         setState(() {
-          curr_session={};
-          status_code=0;
+          curr_session = {};
+          status_code = 0;
         });
       } else {
         print("fetch_sessions status code: ${response.statusCode}");
@@ -60,25 +58,24 @@ class StudentPage extends State<MyStudentPage> {
       print('Error: $error');
     }
 
-    try{
+    try {
       final response = await http.get(
           Uri.parse('$END_POINT/api/course_attendance/'),
           headers: myheaders);
-          if(response.statusCode==200){
-            setState(() {
-              course_att=List<Map<String,dynamic>>.from(jsonDecode(response.body));
-            });
-          }
-          else{
-            print('course_attendance status code: ${response.statusCode}');
-          }
-    }catch(e){
+      if (response.statusCode == 200) {
+        setState(() {
+          course_att =
+              List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        print('course_attendance status code: ${response.statusCode}');
+      }
+    } catch (e) {
       print('error: $e');
     }
   }
 
-
-  Future<void> mark_attendance() async{
+  Future<void> mark_attendance() async {
     try {
       final response = await http.post(
           Uri.parse('$END_POINT/api/mark_attendance/'),
@@ -87,13 +84,13 @@ class StudentPage extends State<MyStudentPage> {
       if (response.statusCode == 200) {
         print('Attendance marked');
         setState(() {
-          att_status=1;
-          att_marked=1;
+          att_status = 1;
+          att_marked = 1;
         });
-      } else if(response.statusCode==403){
+      } else if (response.statusCode == 403) {
         setState(() {
-          att_status=0;
-          att_marked=0;
+          att_status = 0;
+          att_marked = 0;
         });
       } else {
         print("mark_attendance status code: ${response.statusCode}");
@@ -103,7 +100,7 @@ class StudentPage extends State<MyStudentPage> {
     }
   }
 
-  void view_history(String course_id){
+  void view_history(String course_id) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -116,73 +113,118 @@ class StudentPage extends State<MyStudentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Page'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (status_code == 1)
-              Text(
-                curr_session["course"]??'', // Replace with your actual text
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            if (status_code == 1)
-              Text(
-                curr_session["faculty"]??'', // Replace with your actual text
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              if (status_code == 1)
-              Text(
-                curr_session["end_time"]??'', // Replace with your actual text
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            SizedBox(height: 16), // Adjust the spacing as needed
-            status_code == 1
-                ? att_marked==1
-                    ? Text('Attendance Marked', style: TextStyle(fontSize: 18))
-                    : ElevatedButton(
-                        onPressed: () {
-                          mark_attendance();
-                        },
-                        child: Text('Mark Attendance'),
-                      )
-                : att_marked==1
-                ?Text('Attendance Marked')
-                :Text('No Active Sessions'),
-            SizedBox(height: 16), // Adjust the spacing as needed
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: course_att.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    view_history(course_att[index]['course_id']);
-                  },
-                  child: ListTile(
-                    title: Text('${course_att[index]['course_id']}  ${course_att[index]['course_name']}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Classes Attended: ${course_att[index]['attended']}'),
-                        Text('Total Classes: ${course_att[index]['total classes']}'),
-                      ],
+      backgroundColor: Color(0xFF201A30),
+      body: ListView(children: [
+        Padding(
+          padding: const EdgeInsets.only(
+              top: 50.0, bottom: 30.0, left: 20.0, right: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Student Dashboard',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              },
-            ),
-          ],
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Text(
+                    'ACTIVE SESSIONS',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300,
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                height: 2.5,
+                color: Color(0xFF0DF5E3),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              if (status_code == 1)
+                Text(
+                  curr_session["course"] ?? '', 
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              if (status_code == 1)
+                Text(
+                  curr_session["faculty"] ??
+                      '', // Replace with your actual text
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              if (status_code == 1)
+                Text(
+                  curr_session["end_time"] ??
+                      '', // Replace with your actual text
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              SizedBox(height: 16), // Adjust the spacing as needed
+              status_code == 1
+                  ? att_marked == 1
+                      ? Text('Attendance Marked',
+                          style: TextStyle(fontSize: 18))
+                      : ElevatedButton(
+                          onPressed: () {
+                            mark_attendance();
+                          },
+                          child: Text('Mark Attendance'),
+                        )
+                  : att_marked == 1
+                      ? Text('Attendance Marked')
+                      : Text('No Active Sessions'),
+              SizedBox(height: 16), // Adjust the spacing as needed
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: course_att.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      view_history(course_att[index]['course_id']);
+                    },
+                    child: ListTile(
+                      title: Text(
+                          '${course_att[index]['course_id']}  ${course_att[index]['course_name']}'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Classes Attended: ${course_att[index]['attended']}'),
+                          Text(
+                              'Total Classes: ${course_att[index]['total classes']}'),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-      ),
+      ]),
     );
   }
+
   @override
   void dispose() {
     // Cancel the timer when the page is disposed to avoid memory leaks
     _timer.cancel();
     super.dispose();
   }
-
 }
