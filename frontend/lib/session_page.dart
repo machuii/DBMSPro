@@ -5,12 +5,10 @@ import 'home_page.dart';
 import 'dart:convert';
 import 'login_page.dart';
 
+List<Map<dynamic, dynamic>> attended_students = [];
+String apiUrl = '';
 
-List<Map<dynamic,dynamic>> attended_students=[];
-String apiUrl='';
-
-
-class MySessionPage extends StatefulWidget{
+class MySessionPage extends StatefulWidget {
   final String? sid;
   MySessionPage({required this.sid, Key? key}) : super(key: key);
   @override
@@ -28,7 +26,12 @@ class SessionPage extends State<MySessionPage> {
     try {
       String encodedSearchString = Uri.encodeComponent(sid ?? 'null');
       print("encoded: $encodedSearchString");
+<<<<<<< HEAD
       apiUrl = '$END_POINT/api/attended_students/?sid=$encodedSearchString';
+=======
+      apiUrl =
+          'http://localhost:8000/api/attended_students/?sid=$encodedSearchString';
+>>>>>>> e040903ad8ec6cfc8b2913956cda9313839d3567
       var response = await http.get(
         Uri.parse(apiUrl),
         headers: myheaders,
@@ -36,7 +39,8 @@ class SessionPage extends State<MySessionPage> {
 
       if (response.statusCode == 200) {
         setState(() {
-          attended_students = List<Map<dynamic, dynamic>>.from(json.decode(response.body));
+          attended_students =
+              List<Map<dynamic, dynamic>>.from(json.decode(response.body));
         });
       } else {
         print("response code: ${response.statusCode}");
@@ -55,33 +59,53 @@ class SessionPage extends State<MySessionPage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Session Page'),
-        ),
-        body: Column(
-          children: [
-            attended_students.isEmpty
-                ? Center(
-                    // Display this when attended_students is empty
-                    child: Text(
-                      'No attended students',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  )
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: attended_students.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: ListTile(
-                            title: Text(attended_students[index]['name']),
-                            subtitle: Text(attended_students[index]['roll_no']),
-                          ),
-                        );
-                      },
+        body: Padding(
+          padding: const EdgeInsets.all(50.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'SESSION DETAILS',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      color: Colors.white,
                     ),
                   ),
-          ],
+                ],
+              ),
+              SizedBox(height: 30),
+              attended_students.isEmpty
+                  ? Center(
+                      // Display this when attended_students is empty
+                      child: Text(
+                        'NO ATTENDEES YET',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          ),
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: attended_students.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: ListTile(
+                              title: Text(attended_students[index]['name']),
+                              subtitle:
+                                  Text(attended_students[index]['roll_no']),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ],
+          ),
         ),
       ),
     );
