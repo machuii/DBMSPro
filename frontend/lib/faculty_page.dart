@@ -152,7 +152,7 @@ class FacultyPage extends State<MyFacultyPage> {
     return Scaffold(
       backgroundColor: Color(0xFF201A30),
       body: Padding(
-        padding: const EdgeInsets.all(50.0),
+        padding: const EdgeInsets.only(top: 50.0, bottom: 50.0, left: 20.0, right: 20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -324,102 +324,99 @@ class FacultyPage extends State<MyFacultyPage> {
             SizedBox(
               height: 25,
             ),
-            Container(
-              height: 100,
-              child: Expanded(
-                child: recent_sessions.isEmpty
-                    ? Center(
-                        child: Text(
-                          'NO RECENT SESSIONS',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w500,
-                          ),
+            Expanded(
+              child: recent_sessions.isEmpty
+                  ? Center(
+                      child: Text(
+                        'NO RECENT SESSIONS',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w500,
                         ),
-                      )
-                    : ListView.builder(
-                        itemCount: recent_sessions.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  session_details(recent_sessions[index]['sid']);
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF686666),
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: ListTile(
-                                      title: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8.0),
-                                        child: Text(
-                                          recent_sessions[index]['course'] ?? '',
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w300,
-                                          ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: recent_sessions.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                session_details(recent_sessions[index]['sid']);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF686666),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: ListTile(
+                                    title: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: Text(
+                                        recent_sessions[index]['course'] ?? '',
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w300,
                                         ),
                                       ),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: Text(
-                                              recent_sessions[index]['batch'] ??
-                                                  '',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: Text(
-                                              recent_sessions[index]
-                                                      ['datetime'] ??
-                                                  '',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      leading: Container(
-                                        width: 40,
-                                        height: 40,
-                                        alignment: Alignment.center,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
                                           child: Text(
-                                            (recent_sessions[index]['attendance'])
-                                                .toString(),
+                                            recent_sessions[index]['batch'] ??
+                                                '',
                                             style: TextStyle(
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.w500,
                                               fontFamily: 'Montserrat',
                                               color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w300,
                                             ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: Text(
+                                            recent_sessions[index]
+                                                    ['datetime'] ??
+                                                '',
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    leading: Container(
+                                      width: 40,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: Text(
+                                          (recent_sessions[index]['attendance'])
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ),
@@ -427,14 +424,14 @@ class FacultyPage extends State<MyFacultyPage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
             ),
             SizedBox(
               height: 35,
