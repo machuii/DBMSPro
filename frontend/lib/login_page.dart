@@ -19,6 +19,7 @@ class LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   String responseMessage = '';
+  String errorMessage = '';
   String selectedButton = 'STUDENT';
 
   Future<void> sendLoginData(String username, String password) async {
@@ -54,6 +55,7 @@ class LoginPageState extends State<LoginPage> {
       } else if (response.statusCode == 400) {
         setState(() {
           responseMessage = 'Invalid username/password';
+          errorMessage = responseMessage;
         });
       } else {
         logger.i('Failed to send data to the API');
@@ -284,7 +286,7 @@ class LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 30,),
                 Text(
-                  responseMessage, 
+                  errorMessage,
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     color: Color(0xffff0000),
