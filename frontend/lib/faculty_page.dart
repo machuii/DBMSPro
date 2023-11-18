@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'login_page.dart';
 import 'session_page.dart';
 import 'attendance_page.dart';
+import 'dart:async';
 
 class MyFacultyPage extends StatefulWidget {
   @override
@@ -12,6 +13,8 @@ class MyFacultyPage extends StatefulWidget {
 }
 
 class FacultyPage extends State<MyFacultyPage> {
+
+  late Timer _timer;
   List<Map<String, dynamic>> recent_sessions = [];
   String batch_selected = 'elec';
   String active_time = '';
@@ -27,6 +30,9 @@ class FacultyPage extends State<MyFacultyPage> {
       batch_selected = 'CS01';
     }
     loadData();
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      _refreshData();
+    });
   }
 
   Future<void> loadData() async {
@@ -38,6 +44,10 @@ class FacultyPage extends State<MyFacultyPage> {
       print("Error loading data: $e");
       // Handle the error as needed
     }
+  }
+
+  Future<void> _refreshData() async{
+    await loadData();
   }
 
   Future<void> fetchcourse() async {
@@ -70,7 +80,6 @@ class FacultyPage extends State<MyFacultyPage> {
           recent_sessions =
               List<Map<String, dynamic>>.from(json.decode(response.body));
         });
-        print(myheaders);
       } else {
         throw Exception("recent_session status code: ${response.statusCode}");
       }
@@ -86,11 +95,10 @@ class FacultyPage extends State<MyFacultyPage> {
   }
 
   void session_details(String? sid_) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => MyFacultyPage()),
-    );
-    print('sid: $sid_');
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (BuildContext context) => MyFacultyPage()),
+    // );
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -124,11 +132,7 @@ class FacultyPage extends State<MyFacultyPage> {
     });
     try {
       if (response.statusCode == 200) {
-        print(response);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) => MyFacultyPage()),
-        );
+        await _refreshData();
       } else {
         print("make_session response: ${response.statusCode}");
       }
@@ -626,5 +630,12 @@ class FacultyPage extends State<MyFacultyPage> {
         ),
       ]),
     );
+  }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the page is disposed to avoid memory leaks
+    _timer.cancel();
+    super.dispose();
   }
 }

@@ -4,11 +4,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'login_page.dart';
 import 'home_page.dart';
+import 'dart:async';
+
 
 List<List<dynamic>> batch_students = [];
 String att_url = '';
 
 class MyAttendancePage extends StatefulWidget {
+
   final String? batch;
   int attn = 0;
   MyAttendancePage({required this.batch, required this.attn, Key? key})
@@ -19,13 +22,22 @@ class MyAttendancePage extends StatefulWidget {
 }
 
 class AttendancePageState extends State<MyAttendancePage> {
+
+  late Timer _timer;
   @override
   void initState() {
     super.initState();
     send_attendance(widget.batch);
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      _refreshData();
+    });
   }
 
-  void send_attendance(String? batch) async {
+  Future<void> _refreshData() async{
+    await send_attendance(widget.batch);
+  }
+
+  Future<void> send_attendance(String? batch) async {
     try {
       String encodedSearchString = Uri.encodeComponent(batch ?? 'elective');
       att_url = '$END_POINT/api/batch_attendance/?batch=$encodedSearchString';
@@ -204,5 +216,11 @@ class AttendancePageState extends State<MyAttendancePage> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    // Cancel the timer when the page is disposed to avoid memory leaks
+    _timer.cancel();
+    super.dispose();
   }
 }
