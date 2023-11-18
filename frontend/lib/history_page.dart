@@ -58,7 +58,7 @@ class HistoryPage extends State<MyHistoryPage> {
     return Scaffold(
         backgroundColor: Color(0xFF201A30),
         body: Padding(
-          padding: const EdgeInsets.all(30.0),
+          padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0, top: 40.0),
           child: Column(
             children: [
               Row(
@@ -106,126 +106,153 @@ class HistoryPage extends State<MyHistoryPage> {
                 color: Color(0xFF0DF5E3),
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
-              isLoading ?
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0),
-                child: SpinKitThreeBounce(
-                  // Replace with your desired Spinkit
-                  color: Color(0xFF0DF5E3),
-                  size: 20.0,
-                ),
-              ) :
-              att_history.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15.0),
-                        child: Text(
-                          'NO ATTENDANCE HISTORY AVAILABLE',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Colors.red,
-                          ),
-                        ),
+              isLoading
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: SpinKitThreeBounce(
+                        // Replace with your desired Spinkit
+                        color: Color(0xFF0DF5E3),
+                        size: 20.0,
                       ),
                     )
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: att_history.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            child: Container(
-                              height: 80,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF686666),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ListTile(
-                                title: Padding(
-                                  padding: const EdgeInsets.only(bottom: 6.0, right: 6.0,),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(top: 1.5, bottom: 1.5),
-                                              child: Text(
-                                                'Date: ${att_history[index]['time']}',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: 'Montserrat',
-                                                    color: Colors.white,
-                                                    fontSize: 16),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(2.0),
-                                              child: Text(
-                                                'Faculty: ${att_history[index]['faculty']}',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w200,
-                                                    fontFamily: 'Montserrat',
-                                                    color: Colors.white,
-                                                    fontSize: 16),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            att_history[index]['attended'] ==
-                                                    'False'
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(5.0),
-                                                    child: Text(
-                                                      'ABSENT',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontFamily: 'Montserrat',
-                                                          color: Colors.red,
-                                                          fontSize: 16),
-                                                    ),
-                                                  )
-                                                : Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(5.0),
-                                                    child: Text(
-                                                      'PRESENT',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontFamily: 'Montserrat',
-                                                          color: Color(0xFF0DF5E3),
-                                                          fontSize: 16),
-                                                    ),
-                                                  )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                  : att_history.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Text(
+                              'NO ATTENDANCE HISTORY AVAILABLE',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Colors.red,
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: att_history.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: Container(
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF686666),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: ListTile(
+                                    title: Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 6.0,
+                                        right: 6.0,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 1.5,
+                                                          bottom: 1.5),
+                                                  child: Text(
+                                                    'Date: ${att_history[index]['time']}',
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color: Colors.white,
+                                                        fontSize: 16),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(2.0),
+                                                  child: Text(
+                                                    'Faculty: ${att_history[index]['faculty']}',
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: false,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w200,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color: Colors.white,
+                                                        fontSize: 16),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                att_history[index]
+                                                            ['attended'] ==
+                                                        'False'
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: Text(
+                                                          'ABSENT',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                              color: Colors.red,
+                                                              fontSize: 16),
+                                                        ),
+                                                      )
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: Text(
+                                                          'PRESENT',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                              color: Color(
+                                                                  0xFF0DF5E3),
+                                                              fontSize: 16),
+                                                        ),
+                                                      )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
             ],
           ),
         ));

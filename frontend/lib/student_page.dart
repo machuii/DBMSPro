@@ -125,7 +125,7 @@ class StudentPage extends State<MyStudentPage> {
         child: ListView(children: [
           Padding(
             padding: const EdgeInsets.only(
-                top: 50.0, bottom: 30.0, left: 20.0, right: 20.0),
+                top: 30.0, bottom: 30.0, left: 20.0, right: 20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -261,6 +261,7 @@ class StudentPage extends State<MyStudentPage> {
                                                             top: 15.0),
                                                     child: Container(
                                                       height: 40,
+                                                      width: 100,
                                                       child: ElevatedButton(
                                                         style: ElevatedButton
                                                             .styleFrom(
@@ -283,18 +284,26 @@ class StudentPage extends State<MyStudentPage> {
                                                             isLoading = false;
                                                           });
                                                         },
-                                                        child: Text(
-                                                          'ATTEND',
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              color: Color(
-                                                                  0xFF201A30)),
-                                                        ),
+                                                        child: isLoading
+                                                            ? SpinKitThreeBounce(
+                                                                // Replace with your desired Spinkit
+                                                                color: Color(
+                                                                    0xFF201A30),
+                                                                size: 20.0,
+                                                              )
+                                                            : Text(
+                                                                'ATTEND',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    color: Color(
+                                                                        0xFF201A30)),
+                                                              ),
                                                       ),
                                                     ),
                                                   )
@@ -350,6 +359,7 @@ class StudentPage extends State<MyStudentPage> {
                         size: 20.0,
                       )
                     : ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: course_att.length,
                         itemBuilder: (context, index) {
