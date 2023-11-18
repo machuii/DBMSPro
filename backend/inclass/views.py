@@ -93,9 +93,9 @@ def fetch_sessions(request):
         return JsonResponse({"Error details": "no sessions"}, safe=False, status=404)
 
 
-@api_view(["PUT"])  # attendance marking for students
+@api_view(["POST"])  # attendance marking for students
 def mark_attendance(request):
-    if request.method == "PUT":
+    if request.method == "POST":
         data = request.data
         sid = data["sid"]
         session = Session.objects.get(sid=sid)
@@ -225,6 +225,8 @@ def student_course_history(request):
         student = request.user.student
         course = Course.objects.get(course_id=request.GET.get("course_id"))
         course_sessions = Session.objects.filter(faculty__course_taken=course)
+        if course.elective is False:
+            course_sessions = course_sessions.filter(batch=student.batch)
         ret = []
         for course_session in course_sessions:
             obj = {}
