@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'home_page.dart';
+import 'faculty_page.dart';
+import 'student_page.dart';
 import 'dart:convert';
 
 var myheaders = {
@@ -45,13 +47,49 @@ class LoginPageState extends State<LoginPage> {
         setState(() {
           responseMessage = login_key;
         });
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyHomePage(),
-            settings: RouteSettings(arguments: {'login_key': login_key}),
-          ),
-        );
+
+      setState(() {
+        response_msg={};
+      });
+    var url = Uri.parse('$END_POINT/api/profile/');
+
+    final profile_response = await http.get(url, headers: myheaders);
+
+    try {
+      if (profile_response.statusCode == 200) {
+        setState(() {
+          logger.i(profile_response.body);
+          response_msg = Map<String, dynamic>.from(json.decode(profile_response.body));
+        });
+        (response_msg != null && response_msg?['roll_no'] == null)
+        ? Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyFacultyPage(),
+              settings: RouteSettings(arguments: {'login_key': login_key}),
+            ),
+          )
+          :Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyFacultyPage(),
+              settings: RouteSettings(arguments: {'login_key': login_key}),
+            ),
+          );
+      } else {
+        logger.i('Error - Status Code: ${profile_response.statusCode}');
+        logger.i('${login_key}');
+      }
+    } catch (e) {
+      logger.i("error: $e");
+    }
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => MyHomePage(),
+        //     settings: RouteSettings(arguments: {'login_key': login_key}),
+        //   ),
+        // );
       } else if (response.statusCode == 400) {
         setState(() {
           responseMessage = 'Invalid username/password';
