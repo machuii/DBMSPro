@@ -43,7 +43,7 @@ class FacultyPage extends State<MyFacultyPage> {
   Future<void> fetchcourse() async {
     try {
       var new_response = await http.get(
-          Uri.parse('http://localhost:8000/api/course_sessions/'),
+          Uri.parse('$END_POINT/api/course_sessions/'),
           headers: myheaders);
       if (new_response.statusCode == 200) {
         setState(() {
@@ -62,7 +62,7 @@ class FacultyPage extends State<MyFacultyPage> {
   Future<void> fetchData() async {
     try {
       var response = await http.get(
-        Uri.parse('http://localhost:8000/api/recent_sessions/'),
+        Uri.parse('$END_POINT/api/recent_sessions/'),
         headers: myheaders,
       );
       if (response.statusCode == 200) {
@@ -112,7 +112,7 @@ class FacultyPage extends State<MyFacultyPage> {
 
   Future<void> make_session(String batch, String duration) async {
     final response = await http.post(
-      Uri.parse('http://localhost:8000/api/create_session/'),
+      Uri.parse('$END_POINT/api/create_session/'),
       body: {
         'batch': batch,
         'duration': duration,

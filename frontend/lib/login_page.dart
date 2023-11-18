@@ -25,7 +25,7 @@ class LoginPageState extends State<LoginPage> {
     var logger = Logger();
 
     final response = await http.post(
-      Uri.parse('http://localhost:8000/api/dj-rest-auth/login/'),
+      Uri.parse('$END_POINT/api/dj-rest-auth/login/'),
       body: {
         'username': username,
         'password': password,

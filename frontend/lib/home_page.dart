@@ -6,7 +6,7 @@ import 'faculty_page.dart';
 import 'student_page.dart';
 import 'login_page.dart';
 
-
+const END_POINT = String.fromEnvironment('END_POINT', defaultValue: 'http://localhost:8000');
 
 var logger=Logger();
 Map<String,dynamic>? response_msg={};
@@ -33,7 +33,7 @@ class HomePage extends State<MyHomePage> {
     setState(() {
       response_msg={};
     });
-  var url = Uri.parse('http://localhost:8000/api/profile/');
+  var url = Uri.parse('$END_POINT/api/profile/');
 
   final response = await http.get(url, headers: myheaders);
 

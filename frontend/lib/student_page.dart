@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'login_page.dart';
+import 'home_page.dart';
 
 String displayText = 'Mark Attendance';
 
@@ -32,7 +33,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> {
   Future<void> checkAttendance() async {
     try {
       final response = await http.get(
-          Uri.parse('http://localhost:8000/api/mark_attendance/'),
+          Uri.parse('$END_POINT/api/mark_attendance/'),
           headers: myheaders);
       Logger().i("Status Code : ${response.statusCode}");
       if (response.statusCode == 200) {
