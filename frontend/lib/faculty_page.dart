@@ -151,385 +151,403 @@ class FacultyPage extends State<MyFacultyPage> {
     view_faculty_page();
     return Scaffold(
       backgroundColor: Color(0xFF201A30),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 50.0, bottom: 50.0, left: 20.0, right: 20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Faculty Dashboard',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                    color: Colors.white,
+      body: ListView(children: [
+        Padding(
+          padding: const EdgeInsets.only(
+              top: 50.0, bottom: 50.0, left: 20.0, right: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Faculty Dashboard',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 30),
-            Row(
-              children: [
-                Text(
-                  'CREATE A NEW SESSION',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w300,
-                    fontSize: 15,
-                    color: Colors.white,
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Text(
+                    'CREATE A NEW SESSION',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300,
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 2.5,
-              color: Color(0xFF0DF5E3),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            //container for create session card
-            Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFF686666),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      (!(response_msg?['is_elective'] ?? false))
-                          ?
-                          //container for dropdown
-                          Container(
-                              width: 130,
-                              child: DropdownButton<String>(
-                                dropdownColor: Color(0xFF201A30),
-                                value: batch_selected,
-                                items: dropdownOptions.map((String option) {
-                                  return DropdownMenuItem<String>(
-                                    value: option,
-                                    child: Text(
-                                      option,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    batch_selected = newValue!;
-                                  });
-                                },
-                              ),
-                            )
-                          : Container(
-                              height: 10,
-                            ),
-                      //container for duration
-                      Container(
-                        width: 130,
-                        child: TextField(
-                          onChanged: (text) {
-                            setState(() {
-                              active_time = text;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              labelText: 'ENTER DURATION',
-                              labelStyle: TextStyle(
-                                fontFamily: 'Montserrat',
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300,
-                                fontSize: 14,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              )),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                height: 2.5,
+                color: Color(0xFF0DF5E3),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              //container for create session card
+              Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF686666),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      //row for create session button
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 150,
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF0DF5E3),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  )),
-                              onPressed: () async {
-                                await create_session(
-                                    batch_selected, active_time);
-                              },
-                              child: Text(
-                                'CREATE SESSION',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xFF201A30),
-                                  fontSize: 12,
-                                  letterSpacing: 0.7,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                    ])),
-            SizedBox(
-              height: 35,
-            ),
-            //row for recent sessions
-            Row(
-              children: [
-                Text(
-                  'RECENT SESSIONS',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w300,
-                    fontSize: 15,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 2.5,
-              color: Color(0xFF0DF5E3),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Expanded(
-              child: recent_sessions.isEmpty
-                  ? Center(
-                      child: Text(
-                        'NO RECENT SESSIONS',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: recent_sessions.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                session_details(recent_sessions[index]['sid']);
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF686666),
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: ListTile(
-                                    title: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 8.0),
+                        (!(response_msg?['is_elective'] ?? false))
+                            ?
+                            //container for dropdown
+                            Container(
+                                width: 130,
+                                child: DropdownButton<String>(
+                                  dropdownColor: Color(0xFF201A30),
+                                  value: batch_selected,
+                                  items: dropdownOptions.map((String option) {
+                                    return DropdownMenuItem<String>(
+                                      value: option,
                                       child: Text(
-                                        recent_sessions[index]['course'] ?? '',
+                                        option,
                                         style: TextStyle(
                                           fontFamily: 'Montserrat',
                                           color: Colors.white,
-                                          fontSize: 15,
                                           fontWeight: FontWeight.w300,
+                                          fontSize: 14,
                                         ),
                                       ),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Text(
-                                            recent_sessions[index]['batch'] ??
-                                                '',
-                                            style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Text(
-                                            recent_sessions[index]
-                                                    ['datetime'] ??
-                                                '',
-                                            style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    leading: Container(
-                                      width: 40,
-                                      height: 40,
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          (recent_sessions[index]['attendance'])
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Montserrat',
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      batch_selected = newValue!;
+                                    });
+                                  },
                                 ),
+                              )
+                            : Container(
+                                height: 10,
                               ),
+                        //container for duration
+                        Container(
+                          width: 130,
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-            ),
-            SizedBox(
-              height: 35,
-            ),
-            //row for batches
-            Row(
-              children: [
-                Text(
-                  'BATCHES',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w300,
-                    fontSize: 15,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 2.5,
-              color: Color(0xFF0DF5E3),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Expanded(
-              child: course_sessions.isEmpty
-                  ? Center(
-                      child: Text(
-                        '',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w500,
+                            onChanged: (text) {
+                              setState(() {
+                                active_time = text;
+                              });
+                            },
+                            decoration: InputDecoration(
+                                labelText: 'ENTER DURATION',
+                                labelStyle: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 14,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                )),
+                          ),
                         ),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: course_sessions.length,
-                      itemBuilder: (context, index) {
-                        return Column(
+                        SizedBox(
+                          height: 20,
+                        ),
+                        //row for create session button
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                batch_attended(course_sessions[index][0],
-                                    course_sessions[index][1]);
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF686666),
-                                  borderRadius: BorderRadius.circular(22),
-                                ),
-                                child: ListTile(
-                                  contentPadding: EdgeInsets.symmetric(vertical: 5),
-                                  title: Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, top: 3.0, bottom: 3.0),
-                                    child: Container(
-                                      child: Text(
-                                        '${course_sessions[index][0]}',
-                                        style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w300,
-                                          ),
-                                      ),
-                                    ),
+                            Container(
+                              width: 150,
+                              height: 40,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF0DF5E3),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    )),
+                                onPressed: () async {
+                                  await create_session(
+                                      batch_selected, active_time);
+                                },
+                                child: Text(
+                                  'CREATE SESSION',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xFF201A30),
+                                    fontSize: 12,
+                                    letterSpacing: 0.7,
                                   ),
-                                  subtitle: Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, top: 3.0, bottom: 3.0),
-                                    child: Container(
-                                      child: Text(
-                                        'NUMBER OF SESSIONS TAKEN: ${course_sessions[index][1]}',
-                                        style: TextStyle(
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                      ])),
+              SizedBox(
+                height: 35,
+              ),
+              //row for recent sessions
+              Row(
+                children: [
+                  Text(
+                    'RECENT SESSIONS',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300,
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                height: 2.5,
+                color: Color(0xFF0DF5E3),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                child: recent_sessions.isEmpty
+                    ? Center(
+                        child: Text(
+                          'NO RECENT SESSIONS',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: recent_sessions.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  session_details(
+                                      recent_sessions[index]['sid']);
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF686666),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: ListTile(
+                                      title: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Text(
+                                          recent_sessions[index]['course'] ??
+                                              '',
+                                          style: TextStyle(
                                             fontFamily: 'Montserrat',
                                             color: Colors.white,
                                             fontSize: 15,
                                             fontWeight: FontWeight.w300,
                                           ),
+                                        ),
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: Text(
+                                              recent_sessions[index]['batch'] ??
+                                                  '',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: Text(
+                                              recent_sessions[index]
+                                                      ['datetime'] ??
+                                                  '',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      leading: Container(
+                                        width: 40,
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                            (recent_sessions[index]
+                                                    ['attendance'])
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Montserrat',
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 20,),
-                          ],
-                        );
-                      },
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+              ),
+              SizedBox(
+                height: 35,
+              ),
+              //row for batches
+              Row(
+                children: [
+                  Text(
+                    'BATCHES',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300,
+                      fontSize: 15,
+                      color: Colors.white,
                     ),
-            ),
-          ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                height: 2.5,
+                color: Color(0xFF0DF5E3),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                child: course_sessions.isEmpty
+                    ? Center(
+                        child: Text(
+                          '',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: course_sessions.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  batch_attended(course_sessions[index][0],
+                                      course_sessions[index][1]);
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF686666),
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 5),
+                                    title: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20.0, top: 3.0, bottom: 3.0),
+                                      child: Container(
+                                        child: Text(
+                                          '${course_sessions[index][0]}',
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20.0, top: 3.0, bottom: 3.0),
+                                      child: Container(
+                                        child: Text(
+                                          'NUMBER OF SESSIONS TAKEN: ${course_sessions[index][1]}',
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ]),
     );
   }
 }

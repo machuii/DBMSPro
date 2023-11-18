@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'login_page.dart';
@@ -120,14 +121,17 @@ class AttendancePageState extends State<MyAttendancePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
+                                        Expanded(
+                                          flex: 4,
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 '${batch_students[index][1]}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: false,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w700,
                                                     fontFamily: 'Montserrat',
@@ -153,26 +157,29 @@ class AttendancePageState extends State<MyAttendancePage> {
                                             ],
                                           ),
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '${(batch_students[index][2] / widget.attn * 100).toStringAsFixed(1)}%',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: 'Montserrat',
-                                                color: (batch_students[index]
-                                                                [2] /
-                                                            widget.attn *
-                                                            100) <
-                                                        80
-                                                    ? Colors.red
-                                                    : Colors.green,
-                                                fontSize: 25,
+                                        Expanded(
+                                          flex: 2,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                '${(batch_students[index][2] / widget.attn * 100).toStringAsFixed(1)}%',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Montserrat',
+                                                  color: (batch_students[index]
+                                                                  [2] /
+                                                              widget.attn *
+                                                              100) <
+                                                          80
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                                  fontSize: 25,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         )
                                       ],
                                     ),
