@@ -72,7 +72,7 @@ class LoginPageState extends State<LoginPage> {
                 : Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MyFacultyPage(),
+                      builder: (context) => MyStudentPage(),
                       settings:
                           RouteSettings(arguments: {'login_key': login_key}),
                     ),
