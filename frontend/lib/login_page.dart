@@ -313,7 +313,7 @@ class LoginPageState extends State<LoginPage> {
                           isLoading = true; // Start loading
                         });
                         _login();
-                        Future.delayed(Duration(seconds: 2), () {
+                        Future.delayed(Duration(seconds: 3), () {
                           setState(() {
                             isLoading =
                                 false; // Stop loading after a delay (replace this with your logic)
