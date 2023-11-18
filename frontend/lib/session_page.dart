@@ -28,7 +28,7 @@ class SessionPage extends State<MySessionPage> {
     try {
       String encodedSearchString = Uri.encodeComponent(sid ?? 'null');
       print("encoded: $encodedSearchString");
-      apiUrl = 'http://localhost:8000/api/attended_students/?sid=$encodedSearchString';
+      apiUrl = '$END_POINT/api/attended_students/?sid=$encodedSearchString';
       var response = await http.get(
         Uri.parse(apiUrl),
         headers: myheaders,

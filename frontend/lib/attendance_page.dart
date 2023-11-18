@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'login_page.dart';
+import 'home_page.dart';
 
 List<List<dynamic>> batch_students = [];
 String att_url = '';
@@ -25,7 +26,7 @@ class AttendancePageState extends State<MyAttendancePage> {
   void send_attendance(String? batch) async {
     try {
       String encodedSearchString = Uri.encodeComponent(batch ?? 'elective');
-      att_url = 'http://localhost:8000/api/batch_attendance/?batch=$encodedSearchString';
+      att_url = '$END_POINT/api/batch_attendance/?batch=$encodedSearchString';
       var response = await http.get(
         Uri.parse(att_url),
         headers: myheaders,
