@@ -181,6 +181,10 @@ def batch_students_attendance(request):
 def get_attendance_statistics(request):
     if request.method == "GET":
         student = request.user.student
+        core_courses = Course.objects.all().filter(elective=False)
+        for course in core_courses:
+            temp = Classes_Attended.objects.get_or_create(student=student, course=course)
+        elective_course = Classes_Attended.objects.get_or_create(student=student, course=student.elected_courses.first()) 
         courses_attended = Classes_Attended.objects.all().filter(student=student)
         ret = []
         for course_attended in courses_attended:
