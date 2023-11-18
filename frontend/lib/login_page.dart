@@ -5,12 +5,11 @@ import 'home_page.dart';
 import 'faculty_page.dart';
 import 'student_page.dart';
 import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-var myheaders = {
-  'Authorization': 'Token $login_key'
-};
+var myheaders = {'Authorization': 'Token $login_key'};
 
-String login_key='';
+String login_key = '';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -23,6 +22,7 @@ class LoginPageState extends State<LoginPage> {
   String responseMessage = '';
   String errorMessage = '';
   String selectedButton = 'STUDENT';
+  bool isLoading = false;
 
   Future<void> sendLoginData(String username, String password) async {
     var logger = Logger();
@@ -40,49 +40,50 @@ class LoginPageState extends State<LoginPage> {
         Map<String, dynamic> firstresponse = json.decode(response.body);
         setState(() {
           login_key = firstresponse['key'];
-          myheaders = {
-            'Authorization': 'Token $login_key'
-          };
+          myheaders = {'Authorization': 'Token $login_key'};
         });
         setState(() {
           responseMessage = login_key;
         });
 
-      setState(() {
-        response_msg={};
-      });
-    var url = Uri.parse('$END_POINT/api/profile/');
-
-    final profile_response = await http.get(url, headers: myheaders);
-
-    try {
-      if (profile_response.statusCode == 200) {
         setState(() {
-          logger.i(profile_response.body);
-          response_msg = Map<String, dynamic>.from(json.decode(profile_response.body));
+          response_msg = {};
         });
-        (response_msg != null && response_msg?['roll_no'] == null)
-        ? Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyFacultyPage(),
-              settings: RouteSettings(arguments: {'login_key': login_key}),
-            ),
-          )
-          :Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyFacultyPage(),
-              settings: RouteSettings(arguments: {'login_key': login_key}),
-            ),
-          );
-      } else {
-        logger.i('Error - Status Code: ${profile_response.statusCode}');
-        logger.i('${login_key}');
-      }
-    } catch (e) {
-      logger.i("error: $e");
-    }
+        var url = Uri.parse('$END_POINT/api/profile/');
+
+        final profile_response = await http.get(url, headers: myheaders);
+
+        try {
+          if (profile_response.statusCode == 200) {
+            setState(() {
+              logger.i(profile_response.body);
+              response_msg =
+                  Map<String, dynamic>.from(json.decode(profile_response.body));
+            });
+            (response_msg != null && response_msg?['roll_no'] == null)
+                ? Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyFacultyPage(),
+                      settings:
+                          RouteSettings(arguments: {'login_key': login_key}),
+                    ),
+                  )
+                : Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyFacultyPage(),
+                      settings:
+                          RouteSettings(arguments: {'login_key': login_key}),
+                    ),
+                  );
+          } else {
+            logger.i('Error - Status Code: ${profile_response.statusCode}');
+            logger.i('${login_key}');
+          }
+        } catch (e) {
+          logger.i("error: $e");
+        }
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
@@ -105,7 +106,7 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _login() {
+  Future<void> _login() async {
     String username = usernameController.text;
     String password = passwordController.text;
 
@@ -157,7 +158,9 @@ class LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 30),  // Increased distance from the 'Login to InClass' text to the 'STUDENT' button
+                SizedBox(
+                    height:
+                        30), // Increased distance from the 'Login to InClass' text to the 'STUDENT' button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: SizedBox(
@@ -173,7 +176,8 @@ class LoginPageState extends State<LoginPage> {
                               });
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 13.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 13.0),
                               child: Text(
                                 'STUDENT',
                                 style: TextStyle(
@@ -191,7 +195,8 @@ class LoginPageState extends State<LoginPage> {
                                   ? Colors.white
                                   : Color(0xFF201A30),
                               onPrimary: Color(0xFF201A30),
-                              side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
+                              side: BorderSide(
+                                  color: Color(0xFF9A8AC4), width: 3),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(13),
@@ -209,7 +214,8 @@ class LoginPageState extends State<LoginPage> {
                               });
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 13.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 13.0),
                               child: Text(
                                 'FACULTY',
                                 style: TextStyle(
@@ -227,13 +233,13 @@ class LoginPageState extends State<LoginPage> {
                                   ? Colors.white
                                   : Color(0xFF201A30),
                               onPrimary: Color(0xFF201A30),
-                              side: BorderSide(color: Color(0xFF9A8AC4), width: 3),
+                              side: BorderSide(
+                                  color: Color(0xFF9A8AC4), width: 3),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(13),
-                                  bottomRight: Radius.circular(13),
-                                )
-                              ), // Adjust width and height as needed
+                                  borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(13),
+                                bottomRight: Radius.circular(13),
+                              )), // Adjust width and height as needed
                             ),
                           ),
                         ),
@@ -266,7 +272,9 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),  // Increased distance from the username input box to the password input box
+                SizedBox(
+                    height:
+                        30), // Increased distance from the username input box to the password input box
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: TextField(
@@ -292,37 +300,59 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 35,),
+                SizedBox(
+                  height: 35,
+                ),
                 SizedBox(
                   width: 100,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _login();
-                    },
-                    child: Container(
-                      height: 50,
-                      child: Center(
-                        child: Text(
-                          'LOGIN',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF201A30),
-                            letterSpacing: 1,
-                          ),
+                  child: Container(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true; // Start loading
+                        });
+                        _login();
+                        Future.delayed(Duration(seconds: 2), () {
+                          setState(() {
+                            isLoading =
+                                false; // Stop loading after a delay (replace this with your logic)
+                          });
+                        });
+                      },
+                      child: isLoading
+                          ? SpinKitThreeBounce(
+                              // Replace with your desired Spinkit
+                              color: Color(0xFF201A30),
+                              size: 20.0,
+                            )
+                          : Container(
+                              height: 50,
+                              child: Center(
+                                child: Text(
+                                  'LOGIN',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF201A30),
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF0DF5E3),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF0DF5E3),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
                 Text(
                   errorMessage,
                   style: TextStyle(

@@ -55,22 +55,42 @@ class SessionPage extends State<MySessionPage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(50.0),
+          padding: const EdgeInsets.only(
+              top: 50.0, bottom: 30.0, left: 20.0, right: 20.0),
           child: Column(
             children: [
               Row(
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    color: Color(0xFF0DF5E3),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pop(); // Navigate back to the previous screen
+                    },
+                  ),
                   Text(
-                    'SESSION DETAILS',
+                    'Session Details',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
                     style: TextStyle(
                       fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       fontSize: 26,
                       color: Colors.white,
                     ),
                   ),
                 ],
               ),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                height: 2.5,
+                color: Color(0xFF0DF5E3),
+              ),
+              SizedBox(height: 15),
               SizedBox(height: 30),
               attended_students.isEmpty
                   ? Center(
@@ -82,18 +102,52 @@ class SessionPage extends State<MySessionPage> {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
-                          ),
+                        ),
                       ),
                     )
                   : Expanded(
                       child: ListView.builder(
                         itemCount: attended_students.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            child: ListTile(
-                              title: Text(attended_students[index]['name']),
-                              subtitle:
-                                  Text(attended_students[index]['roll_no']),
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xFF686666),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: ListTile(
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        attended_students[index]['name']
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.white,
+                                            fontSize: 16),
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Text(
+                                        attended_students[index]['roll_no'],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.white,
+                                            fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           );
                         },

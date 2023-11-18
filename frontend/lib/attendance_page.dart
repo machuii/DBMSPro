@@ -62,12 +62,20 @@ class AttendancePageState extends State<MyAttendancePage> {
             children: [
               Row(
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    color: Color(0xFF0DF5E3),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pop(); // Navigate back to the previous screen
+                    },
+                  ),
                   Text(
-                    'Batch Details',
+                    'Batch Details - ${widget.batch}',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.bold,
-                      fontSize: 26,
+                      fontSize: 23,
                       color: Colors.white,
                     ),
                   ),
@@ -82,7 +90,7 @@ class AttendancePageState extends State<MyAttendancePage> {
               ),
               SizedBox(height: 15),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                 child: Text(
                   'NUMBER OF SESSIONS TAKEN: ${widget.attn}',
                   style: TextStyle(
@@ -108,7 +116,7 @@ class AttendancePageState extends State<MyAttendancePage> {
                           if (index < batch_students.length) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                  const EdgeInsets.only(bottom: 16.0),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xFF686666),
