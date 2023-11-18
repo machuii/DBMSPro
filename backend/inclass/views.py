@@ -225,6 +225,8 @@ def student_course_history(request):
         student = request.user.student
         course = Course.objects.get(course_id=request.GET.get("course_id"))
         course_sessions = Session.objects.filter(faculty__course_taken=course)
+        if course.elective is False:
+            course_sessions = course_sessions.filter(batch=student.batch)
         ret = []
         for course_session in course_sessions:
             obj = {}
