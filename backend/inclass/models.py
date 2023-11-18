@@ -10,7 +10,7 @@ import uuid
 class Student(models.Model):
     roll_no = models.CharField(max_length=9, primary_key=True) 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=40)
     batch = models.CharField(max_length=4)
     elected_courses = models.ManyToManyField('Course', blank=True, related_name="students_elected")
     attended_sessions = models.ManyToManyField('Session', blank=True, related_name="attended_students")
@@ -36,7 +36,7 @@ class Faculty(models.Model):
 
 class Course(models.Model):
     course_id = models.CharField(primary_key=True, max_length=10)
-    course_name = models.CharField(max_length=30)
+    course_name = models.CharField(max_length=40)
     elective = models.BooleanField(default=False)
 
     def __str__(self) -> str:
