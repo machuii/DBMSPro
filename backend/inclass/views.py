@@ -93,9 +93,9 @@ def fetch_sessions(request):
         return JsonResponse({"Error details": "no sessions"}, safe=False, status=404)
 
 
-@api_view(["PUT"])  # attendance marking for students
+@api_view(["POST"])  # attendance marking for students
 def mark_attendance(request):
-    if request.method == "PUT":
+    if request.method == "POST":
         data = request.data
         sid = data["sid"]
         session = Session.objects.get(sid=sid)
