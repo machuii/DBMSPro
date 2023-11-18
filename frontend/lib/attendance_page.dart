@@ -56,7 +56,7 @@ class AttendancePageState extends State<MyAttendancePage> {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.only(
-              top: 40.0, bottom: 30.0, left: 20.0, right: 20.0),
+              top: 50.0, bottom: 30.0, left: 20.0, right: 20.0),
           child: Column(
             children: [
               Row(
@@ -120,35 +120,38 @@ class AttendancePageState extends State<MyAttendancePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${batch_students[index][1]}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontFamily: 'Montserrat',
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                            Text(
-                                              '${batch_students[index][0]}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontFamily: 'Montserrat',
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                            Text(
-                                              'Classes Attended: ${batch_students[index][2]}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontFamily: 'Montserrat',
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                          ],
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${batch_students[index][1]}',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontFamily: 'Montserrat',
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                '${batch_students[index][0]}',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontFamily: 'Montserrat',
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                'Classes Attended: ${batch_students[index][2]}',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontFamily: 'Montserrat',
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         Column(
                                           crossAxisAlignment:
