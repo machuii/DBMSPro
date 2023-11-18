@@ -178,7 +178,8 @@ class FacultyPage extends State<MyFacultyPage> {
     view_faculty_page();
     return Scaffold(
       backgroundColor: Color(0xFF201A30),
-      body: ListView(children: [
+      body: ListView(
+        children: [
         Padding(
           padding: const EdgeInsets.only(
               top: 30.0, bottom: 50.0, left: 20.0, right: 20.0),
