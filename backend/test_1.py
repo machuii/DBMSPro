@@ -11,9 +11,9 @@ from django.contrib.auth.models import User
 
 sid = input()
 number = int(input())
-session = Session.objects.get(sid=sid)
+session = Session.objects.get(sid=sid.strip())
 if session.faculty.course_taken.elective is True:
-    students = list(session.faculty.course_taken.students_elected)
+    students = list(session.faculty.course_taken.students_elected.all())
 else:
     students = list(Student.objects.all().filter(batch=session.batch))
 students = random.sample(students, number)
