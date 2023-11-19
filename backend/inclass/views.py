@@ -147,6 +147,8 @@ def create_session(request):
 )  # for aculty to see the total number of classes of his course to each batch
 def total_course_sessions(request):
     if request.method == "GET":
+        if request.user.faculty.course_taken.elective is True:
+            ret = [['elec', Total_Classes.objects.all().filter(course=request.user.faculty.course_taken, batch='elec')]]
         course_sessions = Total_Classes.objects.all().filter(
             course=request.user.faculty.course_taken
         )
