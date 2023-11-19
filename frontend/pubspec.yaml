@@ -79,8 +79,6 @@ flutter:
           weight: 500
         - asset: assets/fonts/Montserrat-Bold.ttf
           weight: 700
-  assets:
-    - assets/images/left_arrow.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
