@@ -73,6 +73,9 @@ def fetch_sessions(request):
                 "%Y-%m-%d %H:%M"
             )
             ret["faculty"] = session.faculty.name
+            ret['has_attended'] = False
+            if request.user.student.attended_sessions.all().filter(sid=session.sid).first() is not None:
+                ret['has_attended'] = True
             return Response(ret)
         # if no main course, look for elective
         student = request.user.student
@@ -89,6 +92,9 @@ def fetch_sessions(request):
                 "%Y-%m-%d %H:%M"
             )
             ret["faculty"] = session.faculty.name
+            ret['has_attended'] = False
+            if request.user.student.attended_sessions.all().filter(sid=session.sid).first() is not None:
+                ret['has_attended'] = True
             return Response(ret)
         return JsonResponse({"Error details": "no sessions"}, safe=False, status=404)
 
