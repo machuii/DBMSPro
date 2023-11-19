@@ -659,8 +659,8 @@ class FacultyPage extends State<MyFacultyPage> {
                                                           'is_elective'] ??
                                                       false))
                                                   ? Text(
-                                                      recent_sessions[index]
-                                                              ['course'] ??
+                                                      response_msg?['course_taken']
+                                                               ??
                                                           '',
                                                       style: TextStyle(
                                                         fontFamily:
