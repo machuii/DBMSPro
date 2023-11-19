@@ -6,6 +6,7 @@ import 'login_page.dart';
 import 'session_page.dart';
 import 'attendance_page.dart';
 import 'dart:async';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MyFacultyPage extends StatefulWidget {
   @override
@@ -13,7 +14,6 @@ class MyFacultyPage extends StatefulWidget {
 }
 
 class FacultyPage extends State<MyFacultyPage> {
-
   late Timer _timer;
   List<Map<String, dynamic>> recent_sessions = [];
   String batch_selected = 'elec';
@@ -23,6 +23,9 @@ class FacultyPage extends State<MyFacultyPage> {
   List<List<dynamic>> course_sessions = [];
   Map<String, String> sid_list = {};
   String session_err_message = '';
+  bool isLoading = false;
+  bool isLoadingInitial = true;
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +33,11 @@ class FacultyPage extends State<MyFacultyPage> {
       batch_selected = 'CS01';
     }
     loadData();
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoadingInitial = false;
+      });
+    });
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {
       _refreshData();
     });
@@ -46,7 +54,7 @@ class FacultyPage extends State<MyFacultyPage> {
     }
   }
 
-  Future<void> _refreshData() async{
+  Future<void> _refreshData() async {
     await loadData();
   }
 
@@ -143,24 +151,24 @@ class FacultyPage extends State<MyFacultyPage> {
 
   Future<void> create_session(String batch_selected, String active_time) async {
     if (batch_selected.isEmpty || active_time.isEmpty) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text('Please specify the batch and duration.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Please specify the batch and duration.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
       await make_session(batch_selected, active_time);
     }
   }
@@ -170,7 +178,8 @@ class FacultyPage extends State<MyFacultyPage> {
     view_faculty_page();
     return Scaffold(
       backgroundColor: Color(0xFF201A30),
-      body: ListView(children: [
+      body: ListView(
+        children: [
         Padding(
           padding: const EdgeInsets.only(
               top: 30.0, bottom: 50.0, left: 20.0, right: 20.0),
@@ -304,19 +313,31 @@ class FacultyPage extends State<MyFacultyPage> {
                                       borderRadius: BorderRadius.circular(20),
                                     )),
                                 onPressed: () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
                                   await create_session(
                                       batch_selected, active_time);
+                                  setState(() {
+                                    isLoading = false;
+                                  });
                                 },
-                                child: Text(
-                                  'CREATE SESSION',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFF201A30),
-                                    fontSize: 12,
-                                    letterSpacing: 0.7,
-                                  ),
-                                ),
+                                child: isLoading
+                                    ? SpinKitThreeBounce(
+                                        // Replace with your desired Spinkit
+                                        color: Color(0xFF201A30),
+                                        size: 20.0,
+                                      )
+                                    : Text(
+                                        'CREATE SESSION',
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.w900,
+                                          color: Color(0xFF201A30),
+                                          fontSize: 12,
+                                          letterSpacing: 0.7,
+                                        ),
+                                      ),
                               ),
                             ),
                           ],
@@ -361,111 +382,154 @@ class FacultyPage extends State<MyFacultyPage> {
               SizedBox(
                 height: 25,
               ),
-              Container(
-                child: recent_sessions.isEmpty
-                    ? Center(
-                        child: Text(
-                          'NO RECENT SESSIONS',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      )
-                    : ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: recent_sessions.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  session_details(
-                                      recent_sessions[index]['sid']);
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF686666),
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 5.0,
-                                        left: 1.0,
-                                        right: 5.0,
-                                        bottom: 5.0),
-                                    child: ListTile(
-                                      title: Row(
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'STRENGTH',
-                                                style: TextStyle(
-                                                  fontSize: 6,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'Montserrat',
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              Text(
-                                                (recent_sessions[index]
-                                                        ['attendance'])
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'Montserrat',
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 10.0,
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+              isLoadingInitial
+                  ? SpinKitDoubleBounce(
+                      // Replace with your desired Spinkit
+                      color: Color(0xFF0DF5E3),
+                      size: 20.0,
+                    )
+                  : Container(
+                      child: recent_sessions.isEmpty
+                          ? Center(
+                              child: Text(
+                                'NO RECENT SESSIONS',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: recent_sessions.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        session_details(
+                                            recent_sessions[index]['sid']);
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF686666),
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 5.0,
+                                              left: 1.0,
+                                              right: 5.0,
+                                              bottom: 5.0),
+                                          child: ListTile(
+                                            title: Row(
                                               children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: Container(
-                                                    width: 210,
-                                                    child: Text(
-                                                      recent_sessions[index]
-                                                              ['course'] ??
-                                                          '',
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'STRENGTH',
                                                       style: TextStyle(
+                                                        fontSize: 6,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                         fontFamily:
                                                             'Montserrat',
                                                         color: Colors.white,
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.w300,
                                                       ),
                                                     ),
-                                                  ),
+                                                    Text(
+                                                      (recent_sessions[index]
+                                                              ['attendance'])
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                (!(response_msg?[
-                                                            'is_elective'] ??
-                                                        false))
-                                                    ? Padding(
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    left: 10.0,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: Container(
+                                                          width: 210,
+                                                          child: Text(
+                                                            recent_sessions[
+                                                                        index][
+                                                                    'course'] ??
+                                                                '',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      (!(response_msg?[
+                                                                  'is_elective'] ??
+                                                              false))
+                                                          ? Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(5.0),
+                                                              child: Text(
+                                                                recent_sessions[
+                                                                            index]
+                                                                        [
+                                                                        'batch'] ??
+                                                                    '',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : SizedBox(),
+                                                      Padding(
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(5.0),
                                                         child: Text(
                                                           recent_sessions[index]
-                                                                  ['batch'] ??
+                                                                  [
+                                                                  'datetime'] ??
                                                               '',
                                                           style: TextStyle(
                                                             fontFamily:
@@ -476,41 +540,24 @@ class FacultyPage extends State<MyFacultyPage> {
                                                                 FontWeight.w300,
                                                           ),
                                                         ),
-                                                      )
-                                                    : SizedBox(),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: Text(
-                                                    recent_sessions[index]
-                                                            ['datetime'] ??
-                                                        '',
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      color: Colors.white,
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-              ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                    ),
               SizedBox(
                 height: 35,
               ),
@@ -538,58 +585,90 @@ class FacultyPage extends State<MyFacultyPage> {
               SizedBox(
                 height: 25,
               ),
-              Container(
-                child: course_sessions.isEmpty
-                    ? Center(
-                        child: Text(
-                          '',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      )
-                    : ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: course_sessions.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  batch_attended(course_sessions[index][0],
-                                      course_sessions[index][1]);
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF686666),
-                                    borderRadius: BorderRadius.circular(22),
-                                  ),
-                                  child: ListTile(
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 5),
-                                    title: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20.0, top: 3.0, bottom: 3.0),
+              isLoadingInitial
+                  ? SpinKitDoubleBounce(
+                      // Replace with your desired Spinkit
+                      color: Color(0xFF0DF5E3),
+                      size: 20.0,
+                    )
+                  : Container(
+                      child: course_sessions.isEmpty
+                          ? Center(
+                              child: Text(
+                                '',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: course_sessions.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        batch_attended(
+                                            course_sessions[index][0],
+                                            course_sessions[index][1]);
+                                      },
                                       child: Container(
-                                        child: ((response_msg?['is_elective'] ??
-                                                false))
-                                            ? Text(
-                                                recent_sessions[index]
-                                                        ['course'] ??
-                                                    '',
-                                                style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  color: Colors.white,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w300,
-                                                ),
-                                              )
-                                            : Text(
-                                                '${course_sessions[index][0]}',
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF686666),
+                                          borderRadius:
+                                              BorderRadius.circular(22),
+                                        ),
+                                        child: ListTile(
+                                          contentPadding:
+                                              EdgeInsets.symmetric(vertical: 5),
+                                          title: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20.0,
+                                                top: 3.0,
+                                                bottom: 3.0),
+                                            child: Container(
+                                              child: ((response_msg?[
+                                                          'is_elective'] ??
+                                                      false))
+                                                  ? Text(
+                                                      recent_sessions[index]
+                                                              ['course'] ??
+                                                          '',
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      '${course_sessions[index][0]}',
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                          subtitle: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20.0,
+                                                top: 3.0,
+                                                bottom: 3.0),
+                                            child: Container(
+                                              child: Text(
+                                                'NUMBER OF SESSIONS TAKEN: ${course_sessions[index][1]}',
                                                 style: TextStyle(
                                                   fontFamily: 'Montserrat',
                                                   color: Colors.white,
@@ -597,34 +676,19 @@ class FacultyPage extends State<MyFacultyPage> {
                                                   fontWeight: FontWeight.w300,
                                                 ),
                                               ),
-                                      ),
-                                    ),
-                                    subtitle: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20.0, top: 3.0, bottom: 3.0),
-                                      child: Container(
-                                        child: Text(
-                                          'NUMBER OF SESSIONS TAKEN: ${course_sessions[index][1]}',
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w300,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-              ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                    ),
             ],
           ),
         ),

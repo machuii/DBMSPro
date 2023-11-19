@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'login_page.dart';
 import 'home_page.dart';
 import 'dart:async';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 List<List<dynamic>> batch_students = [];
@@ -22,12 +23,18 @@ class MyAttendancePage extends StatefulWidget {
 }
 
 class AttendancePageState extends State<MyAttendancePage> {
-
   late Timer _timer;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     send_attendance(widget.batch);
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {
       _refreshData();
     });
@@ -113,6 +120,12 @@ class AttendancePageState extends State<MyAttendancePage> {
                   ),
                 ),
               ),
+              isLoading ?
+              SpinKitThreeBounce(
+                // Replace with your desired Spinkit
+                color: Color(0xFF0DF5E3),
+                size: 20.0,
+              ) :
               Expanded(
                 child: batch_students.isEmpty
                     ? Center(

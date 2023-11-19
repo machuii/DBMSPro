@@ -5,6 +5,7 @@ import 'home_page.dart';
 import 'dart:convert';
 import 'login_page.dart';
 import 'dart:async';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 List<Map<dynamic, dynamic>> attended_students = [];
 String apiUrl = '';
@@ -17,21 +18,26 @@ class MySessionPage extends StatefulWidget {
 }
 
 class SessionPage extends State<MySessionPage> {
-
   late Timer _timer;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     send_session(widget.sid);
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {
       _refreshData();
     });
   }
 
-  Future<void> _refreshData() async{
+  Future<void> _refreshData() async {
     await send_session(widget.sid);
   }
-
 
   Future<void> send_session(String? sid) async {
     try {
@@ -101,7 +107,12 @@ class SessionPage extends State<MySessionPage> {
                 color: Color(0xFF0DF5E3),
               ),
               SizedBox(height: 15),
-              SizedBox(height: 30),
+              isLoading ?
+              SpinKitThreeBounce(
+                // Replace with your desired Spinkit
+                color: Color(0xFF0DF5E3),
+                size: 20.0,
+              ) :
               attended_students.isEmpty
                   ? Center(
                       // Display this when attended_students is empty
@@ -169,6 +180,7 @@ class SessionPage extends State<MySessionPage> {
       ),
     );
   }
+
   @override
   void dispose() {
     // Cancel the timer when the page is disposed to avoid memory leaks
