@@ -148,7 +148,8 @@ def create_session(request):
 def total_course_sessions(request):
     if request.method == "GET":
         if request.user.faculty.course_taken.elective is True:
-            ret = [['elec', Total_Classes.objects.all().filter(course=request.user.faculty.course_taken, batch='elec')]]
+            ret = [['elec', Total_Classes.objects.all().filter(course=request.user.faculty.course_taken, batch='elec').first().total_classes]]
+            return Response(ret)
         course_sessions = Total_Classes.objects.all().filter(
             course=request.user.faculty.course_taken
         )
