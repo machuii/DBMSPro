@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'login_page.dart';
 import 'home_page.dart';
 import 'history_page.dart';
@@ -18,7 +17,7 @@ class MyStudentPage extends StatefulWidget {
 
 class StudentPage extends State<MyStudentPage> {
   late Timer _timer;
-  Map<String, String> curr_session = {};
+  Map<String, dynamic> curr_session = {};
   int status_code = 0, att_status = 1;
   int att_marked = 0;
   List<Map<String, dynamic>> course_att = [];
@@ -49,7 +48,13 @@ class StudentPage extends State<MyStudentPage> {
           .get(Uri.parse('$END_POINT/api/fetch_sessions/'), headers: myheaders);
       if (response.statusCode == 200) {
         setState(() {
-          curr_session = Map<String, String>.from(jsonDecode(response.body));
+          curr_session = Map<String, dynamic>.from(jsonDecode(response.body));
+          if (curr_session['has_attended'] == true){
+            att_marked = 1;
+          }
+          else{
+            att_marked = 0;
+          }
           status_code = 1;
         });
       } else if (response.statusCode == 404) {

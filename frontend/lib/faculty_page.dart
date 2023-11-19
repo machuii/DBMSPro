@@ -155,11 +155,35 @@ class FacultyPage extends State<MyFacultyPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please specify the batch and duration.'),
+            backgroundColor: Color.fromRGBO(255, 210, 208, 1),         title: Text(
+              'Error',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                color: Colors.red,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            content: Text(
+              'Please specify the batch and duration.',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                color: Colors.red,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             actions: <Widget>[
               TextButton(
-                child: Text('Close'),
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                fontFamily: 'Montserrat',
+                color: Colors.blue,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+              ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -178,8 +202,7 @@ class FacultyPage extends State<MyFacultyPage> {
     view_faculty_page();
     return Scaffold(
       backgroundColor: Color(0xFF201A30),
-      body: ListView(
-        children: [
+      body: ListView(children: [
         Padding(
           padding: const EdgeInsets.only(
               top: 30.0, bottom: 50.0, left: 20.0, right: 20.0),
